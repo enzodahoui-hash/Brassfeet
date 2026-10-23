@@ -1,0 +1,6 @@
+import { sparql, v, qid } from './sparql.mjs';
+const names = { bra2: 'Campeonato Brasileiro Série B', bra3: 'Campeonato Brasileiro Série C', bra4: 'Campeonato Brasileiro Série D', arg1: 'Liga Profesional de Fútbol', arg2: 'Primera Nacional', uru1: 'Liga AUF Uruguaya', chi1: 'Liga de Primera', chi2: 'Liga de Ascenso Chile', col1: 'Categoría Primera A', ecu1: 'LigaPro Serie A', par1: 'Primera División de Paraguay', per1: 'Liga 1 Peru', bol1: 'División Profesional Bolivia', ven1: 'Liga FUTVE', eng2: 'EFL Championship', esp1: 'La Liga', esp2: 'Segunda División', ita1: 'Serie A', ita2: 'Serie B', ger1: 'Bundesliga', ger2: '2. Bundesliga', fra1: 'Ligue 1', fra2: 'Ligue 2' };
+for (const [k, n] of Object.entries(names)) {
+  const rows = await sparql(`SELECT ?item ?itemLabel ?d WHERE { SERVICE wikibase:mwapi { bd:serviceParam wikibase:endpoint "www.wikidata.org"; wikibase:api "EntitySearch"; mwapi:search "${n}"; mwapi:language "en". ?item wikibase:apiOutputItem mwapi:item. } ?item wdt:P31/wdt:P279* wd:Q15991303 . OPTIONAL { ?item schema:description ?d FILTER(lang(?d)="en") } SERVICE wikibase:label { bd:serviceParam wikibase:language "en". } } LIMIT 4`);
+  console.log(k, rows.map((r) => `${qid(v(r, 'item'))}=${v(r, 'itemLabel')} (${v(r, 'd') ?? ''})`).join(' ; '));
+}

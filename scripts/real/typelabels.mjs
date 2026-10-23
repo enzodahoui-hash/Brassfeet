@@ -1,0 +1,10 @@
+import { sparql, v, qid } from './sparql.mjs';
+import { readFileSync, writeFileSync } from 'node:fs';
+const types = JSON.parse(readFileSync('clubtypes.json', 'utf8'));
+const cnt = {};
+for (const ts of Object.values(types)) for (const t of ts) cnt[t] = (cnt[t] ?? 0) + 1;
+const top = Object.entries(cnt).sort((a, b) => b[1] - a[1]).slice(0, 80).map((x) => x[0]);
+const rows = await sparql(`SELECT ?t ?tLabel WHERE { VALUES ?t { ${top.map((x) => 'wd:' + x).join(' ')} } SERVICE wikibase:label { bd:serviceParam wikibase:language "en". } }`);
+const lab = Object.fromEntries(rows.map((r) => [qid(v(r, 't')), v(r, 'tLabel')]));
+for (const t of top) console.log(t, cnt[t], lab[t]);
+writeFileSync('typelabels.json', JSON.stringify(lab));
