@@ -464,6 +464,9 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
   input[type='range'] { height: 32px; }
   .tbl td { padding: 9px 8px; }
   .tbl-wrap { -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+  /* coluna de ação (ex.: Contratar/Proposta no mercado) fica fixa à direita, sempre visível */
+  .tbl th.act-col, .tbl td.act-col { position: sticky; right: 0; background: var(--panel); box-shadow: -10px 0 10px -8px rgba(0, 0, 0, 0.6); padding-left: 10px; }
+  .tbl tr:hover td.act-col { background: var(--panel-2); }
   .bench-row { padding: 9px 8px; }
   .slot { width: 70px; }
   .slot .nm { max-width: 70px; }
@@ -471,8 +474,10 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
   .slot:hover { transform: translate(-50%, -50%); }
 
   /* janelas viram painéis que sobem da base da tela */
-  .overlay { place-items: end stretch; padding: 0; padding-top: max(24px, env(safe-area-inset-top, 0px)); }
-  .modal, .modal.wide, .modal.narrow { width: 100%; max-height: 100%; border-radius: 16px 16px 0 0; border-bottom: 0; animation: sheet 0.22s ease; }
+  /* altura dinâmica (100dvh): o rodapé com os botões nunca fica atrás da barra do navegador */
+  .overlay { place-items: end stretch; padding: 0; padding-top: max(24px, env(safe-area-inset-top, 0px)); height: 100dvh; }
+  .modal, .modal.wide, .modal.narrow { width: 100%; max-height: calc(100dvh - max(24px, env(safe-area-inset-top, 0px))); border-radius: 16px 16px 0 0; border-bottom: 0; animation: sheet 0.22s ease; }
+  .modal-f { position: sticky; bottom: 0; } /* botões sempre visíveis ao rolar o conteúdo */
   .modal-h { padding: 10px 12px 10px 16px; }
   .modal-h h2 { font-size: 20px; }
   .modal-h::before { content: ''; position: absolute; left: 50%; top: 5px; width: 40px; height: 4px; margin-left: -20px; border-radius: 4px; background: var(--line-2); }

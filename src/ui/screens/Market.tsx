@@ -25,14 +25,14 @@ export function Market() {
   const cols = [
     { key: 'n', label: 'Jogador', render: (p: (typeof results)[number]) => <PName p={p} />, sort: (p: (typeof results)[number]) => p.name },
     { key: 'pos', label: 'Pos', render: (p: (typeof results)[number]) => <PosB pos={p.pos} /> },
-    { key: 'age', label: 'Id', render: (p: (typeof results)[number]) => c.season - p.birthYear, sort: (p: (typeof results)[number]) => c.season - p.birthYear, cls: 'n' },
+    { key: 'age', label: 'Id', render: (p: (typeof results)[number]) => c.season - p.birthYear, sort: (p: (typeof results)[number]) => c.season - p.birthYear, cls: 'n hide-m' },
     { key: 'l', label: 'Nível', render: (p: (typeof results)[number]) => <LevelPair p={p} est={potRange(c, p)} />, sort: (p: (typeof results)[number]) => p.ovr },
     { key: 'cl', label: 'Clube', render: (p: (typeof results)[number]) => (p.clubId ? <ClubName id={p.clubId} short /> : <span className="chip good">Livre</span>) },
     { key: 'v', label: 'Valor', render: (p: (typeof results)[number]) => <Money v={p.value} />, sort: (p: (typeof results)[number]) => p.value, cls: 'n' },
-    { key: 'w', label: 'Salário', render: (p: (typeof results)[number]) => <Money v={p.contract?.wage ?? 0} />, sort: (p: (typeof results)[number]) => p.contract?.wage ?? 0, cls: 'n' },
-    { key: 'ct', label: 'Contrato', render: (p: (typeof results)[number]) => p.contract?.endYear ?? '—', cls: 'n' },
-    { key: 'st', label: 'Situação', render: (p: (typeof results)[number]) => <span className="small">{playerMarketStatus(c, p)}</span> },
-    { key: 'act', label: '', render: (p: (typeof results)[number]) => <button className="btn sm primary" onClick={(e) => { e.stopPropagation(); setNego({ pid: p.id, loan: false }); }} disabled={!!p.loan}>{p.clubId ? 'Proposta' : 'Contratar'}</button> },
+    { key: 'w', label: 'Salário', render: (p: (typeof results)[number]) => <Money v={p.contract?.wage ?? 0} />, sort: (p: (typeof results)[number]) => p.contract?.wage ?? 0, cls: 'n hide-m' },
+    { key: 'ct', label: 'Contrato', render: (p: (typeof results)[number]) => p.contract?.endYear ?? '—', cls: 'n hide-m' },
+    { key: 'st', label: 'Situação', render: (p: (typeof results)[number]) => <span className="small">{playerMarketStatus(c, p)}</span>, cls: 'hide-m' },
+    { key: 'act', label: '', cls: 'act-col', render: (p: (typeof results)[number]) => <button className="btn sm primary" onClick={(e) => { e.stopPropagation(); setNego({ pid: p.id, loan: false }); }} disabled={!!p.loan}>{p.clubId ? 'Proposta' : 'Contratar'}</button> },
   ];
   return (
     <div className="page">
