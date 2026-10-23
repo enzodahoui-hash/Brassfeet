@@ -1,0 +1,50 @@
+# Publicação na Netlify.
+# Caminho A (padrão aqui): só o jogo, como site estático. Funciona completo, com PWA;
+# os salvamentos ficam no navegador de cada jogador (sem contas por e-mail).
+#
+# Caminho B (contas + nuvem): hospede o backend (server/index.mjs) num serviço que roda
+# Node sempre ligado e com disco permanente (Render, Railway, Fly.io). Depois, descomente
+# o bloco [[redirects]] de /api lá embaixo e troque a URL pela do seu backend. Assim a
+# Netlify repassa /api/* para ele, mantendo tudo no mesmo endereço (o cookie de sessão continua valendo).
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Repassar as chamadas de conta para um backend hospedado fora (caminho B).
+# [[redirects]]
+#   from = "/api/*"
+#   to = "https://SEU-BACKEND.exemplo.com/api/:splat"
+#   status = 200
+#   force = true
+
+# Aplicativo de página única: qualquer rota desconhecida cai no index.html.
+# A Netlify serve os arquivos que existem (jogo, ícones, sw.js) antes desta regra.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Arquivos com hash no nome podem ser guardados para sempre pelo navegador.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# O service worker nunca é guardado em cache, para a atualização chegar rápido.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+# Cabeçalhos de segurança equivalentes aos do servidor próprio.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
+    Content-Security-Policy = "default-src 'self'; img-src 'self' data: blob: https://upload.wikimedia.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
