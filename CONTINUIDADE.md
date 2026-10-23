@@ -31,7 +31,11 @@ Estado real do projeto para retomar o trabalho em outra sessão.
 - **`src/ui/`**: React 18.
   - Estado em `ui/store.ts`: `account`, `server`, `initAccount`, `useAccount` e `uploadLocalSaves`.
   - Telas novas: `Account.tsx`, `SubsPanel.tsx` e `StatsViews.tsx`.
-- **`server/`**: `index.mjs` (HTTP puro + `node:sqlite`) e `mail.mjs` (nodemailer, ou log em modo de teste). Documentação em `server/README.md`.
+- **`server/`**: a lógica de contas/salvamentos fica em `core.mjs`, independente de armazenamento (fala com um "store" abstrato).
+  - `index.mjs`: servidor Node (HTTP puro) + `sqliteStore` (`node:sqlite`) — para Render/Railway/Fly/VPS/Docker.
+  - `blobs-store.mjs`: `blobsStore` sobre Netlify Blobs, usado por `netlify/functions/api.mts` (rota `/api/*`) — para rodar inteiro na Netlify.
+  - `mail.mjs`: nodemailer, ou log em modo de teste. Documentação em `server/README.md`.
+  - Mudou a lógica de contas? Altere **só `core.mjs`**; os dois stores e os dois conjuntos de teste (`server.test.ts` via SQLite, `blobs-store.test.ts` via Blobs falso) pegam a regressão.
 - **Testes**: `tests/` usa Vitest; `e2e/run.mjs` sobe o servidor com uma pasta de dados temporária e lê os links de e-mail do log.
 
 ## Pontos sensíveis
@@ -53,7 +57,7 @@ Estado real do projeto para retomar o trabalho em outra sessão.
 
 ## Próximos passos sugeridos
 
-1. Colocar o projeto num repositório Git (o contêiner desta sessão é temporário).
+1. Projeto já está no GitHub (`enzodahoui-hash/Brassfeet`) e publicável na Netlify (`netlify.toml` + função em `netlify/functions/`).
 2. Dividir o pacote JS: carregar os dados reais e o Editor sob demanda.
 3. Mover a simulação da IA para um Web Worker.
 4. Escolher o nome definitivo (sugestão: **Mandante**). Trocar em `config.gameName` (`data/competitions.ts`), `index.html`, `scripts/single-file.mjs`, `server/index.mjs` (`appName`) e no logotipo (`ui/screens/Start.tsx`).

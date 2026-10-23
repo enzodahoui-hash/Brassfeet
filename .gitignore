@@ -10,3 +10,4 @@ scripts/real/*.json
 scripts/real/*.log
 data/
 *.tar.gz
+.netlify

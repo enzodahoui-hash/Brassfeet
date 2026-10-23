@@ -1,28 +1,21 @@
-# Publicação na Netlify.
-# Caminho A (padrão aqui): só o jogo, como site estático. Funciona completo, com PWA;
-# os salvamentos ficam no navegador de cada jogador (sem contas por e-mail).
+# Publicação na Netlify — o jogo E as contas/salvamentos rodam aqui dentro.
+#   • o jogo é o site estático em dist/;
+#   • as rotas /api/* são atendidas por uma Netlify Function (netlify/functions/api.mts),
+#     que guarda contas, sessões e salvamentos em Netlify Blobs (sem servidor sempre ligado e sem banco pago).
 #
-# Caminho B (contas + nuvem): hospede o backend (server/index.mjs) num serviço que roda
-# Node sempre ligado e com disco permanente (Render, Railway, Fly.io). Depois, descomente
-# o bloco [[redirects]] de /api lá embaixo e troque a URL pela do seu backend. Assim a
-# Netlify repassa /api/* para ele, mantendo tudo no mesmo endereço (o cookie de sessão continua valendo).
+# E-mail (opcional): sem SMTP, os links de confirmação e de redefinição de senha aparecem no log da função.
+# Para enviar de verdade, defina as variáveis SMTP_* e MAIL_FROM nas configurações do site (escopo Functions).
 
 [build]
   command = "npm run build"
   publish = "dist"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "22"
 
-# Repassar as chamadas de conta para um backend hospedado fora (caminho B).
-# [[redirects]]
-#   from = "/api/*"
-#   to = "https://SEU-BACKEND.exemplo.com/api/:splat"
-#   status = 200
-#   force = true
-
-# Aplicativo de página única: qualquer rota desconhecida cai no index.html.
-# A Netlify serve os arquivos que existem (jogo, ícones, sw.js) antes desta regra.
+# Aplicativo de página única: rotas desconhecidas caem no index.html.
+# A função (/api/*) e os arquivos que existem (jogo, ícones, sw.js) têm prioridade sobre esta regra.
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -40,7 +33,7 @@
   [headers.values]
     Cache-Control = "no-cache"
 
-# Cabeçalhos de segurança equivalentes aos do servidor próprio.
+# Cabeçalhos de segurança dos arquivos estáticos (as respostas da função definem os seus próprios).
 [[headers]]
   for = "/*"
   [headers.values]

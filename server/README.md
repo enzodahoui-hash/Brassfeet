@@ -4,6 +4,25 @@ O servidor entrega o jogo compilado (`dist/`) e uma API de contas por e-mail. É
 Node.js, sem dependências externas além do `nodemailer` (envio de e-mail). O banco é SQLite
 (`node:sqlite`, embutido no Node 22.13+), gravado em `DATA_DIR/fmbr.sqlite`.
 
+## Onde a lógica vive (dois backends, um núcleo)
+
+Toda a regra de contas e salvamentos fica em **`server/core.mjs`**, independente de armazenamento. Ela fala
+com um "store" abstrato, e há duas implementações:
+
+- **`server/index.mjs`** (este servidor Node) usa `sqliteStore` — guarda tudo num arquivo SQLite. É o caminho
+  para Render, Railway, Fly.io, uma VPS ou Docker.
+- **`netlify/functions/api.mts`** usa `blobsStore` (`server/blobs-store.mjs`) — guarda tudo em **Netlify Blobs**.
+  É o caminho para rodar **inteiro na Netlify**, sem servidor sempre ligado e sem banco pago. O `netlify.toml`
+  já aponta `/api/*` para essa função.
+
+Como o núcleo é o mesmo, os dois caminhos têm exatamente o mesmo comportamento. Os testes comprovam:
+`tests/server.test.ts` exercita o núcleo pelo servidor Node + SQLite, e `tests/blobs-store.test.ts` exercita
+o mesmo núcleo pelo caminho dos Blobs (com um Blobs falso em memória).
+
+Na Netlify, as variáveis de ambiente abaixo (as que fazem sentido) são definidas nas configurações do site,
+com escopo **Functions**; o endereço público vem de `URL`, que a Netlify define sozinha. O limite de corpo de
+uma função é ~6 MB, então lá o `MAX_SAVE_MB` vale no máximo ~5.
+
 ## Rodar
 
 ```bash

@@ -37,7 +37,17 @@ O E2E usa `playwright-core` com o Chromium em `/opt/pw-browsers/chromium`. Em ou
 
 ## Publicar o site
 
-O detalhamento está em [`server/README.md`](server/README.md). Resumo:
+Há dois jeitos, e **os dois rodam o jogo completo com contas e salvamento na nuvem**. O detalhamento está em [`server/README.md`](server/README.md).
+
+### 1. Netlify (tudo dentro da Netlify, sem servidor próprio)
+
+Conecte o repositório na Netlify (**Add new site → Import from GitHub**). O `netlify.toml` já define tudo:
+- o jogo é o site estático em `dist/`;
+- as rotas `/api/*` são atendidas por uma **Netlify Function** (`netlify/functions/api.mts`), que guarda contas, sessões e salvamentos em **Netlify Blobs** — sem servidor sempre ligado e sem banco de dados pago.
+
+E-mail é opcional: sem SMTP, o jogo funciona (a confirmação de e-mail não é obrigatória) e os links aparecem no log da função. Para enviar de verdade, defina nas configurações do site (escopo **Functions**) as variáveis `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` e `MAIL_FROM`. Outras variáveis opcionais: `REQUIRE_EMAIL_VERIFICATION`, `QUOTA_MB`, `MAX_SAVE_MB`, `SESSION_DAYS`, `APP_NAME` (o endereço público vem de `URL`, que a Netlify define sozinha).
+
+### 2. Servidor Node próprio (Render, Railway, Fly.io, VPS, Docker)
 
 ```bash
 npm ci && npm run build
@@ -46,9 +56,9 @@ SMTP_HOST=smtp.exemplo.com SMTP_USER=... SMTP_PASS=... MAIL_FROM="Mandante <no-r
 npm start
 ```
 
-Também dá para usar Docker: `docker compose up -d --build`. Em Render, Railway, Fly.io ou numa VPS, use um disco persistente para `DATA_DIR` e HTTPS na frente. Sem SMTP configurado, os e-mails de confirmação e de redefinição de senha aparecem no log do servidor, o que serve para testes.
+Também dá para usar Docker: `docker compose up -d --build`. Use um disco persistente para `DATA_DIR` (o banco SQLite) e HTTPS na frente.
 
-Uma hospedagem só de arquivos estáticos (o conteúdo de `dist/`) também roda o jogo, mas sem contas. Nesse caso, o progresso fica no navegador.
+> A mesma lógica de contas e salvamentos vive em `server/core.mjs` e é usada pelos dois caminhos: o servidor Node guarda em SQLite; a função da Netlify guarda em Blobs. Uma hospedagem só de arquivos estáticos também roda o jogo, mas sem contas (o progresso fica no navegador).
 
 ## Jogar no celular
 
@@ -128,9 +138,10 @@ Abas: Jogadores, Clubes (com construtor de escudo), Competições, Prêmios e re
 
 ## Testes
 
-- **`npm test`**: 101 testes em 8 arquivos.
+- **`npm test`**: 106 testes em 9 arquivos.
   - `tests/subs-stats.test.ts` cobre os 13 testes exigidos de substituições e estatísticas;
-  - `tests/server.test.ts` cobre contas, e-mails, sessões, CSRF, limite de tentativas, cota e uma carreira real salva e carregada pela conta;
+  - `tests/server.test.ts` cobre contas, e-mails, sessões, CSRF, limite de tentativas, cota e uma carreira real salva e carregada pela conta (servidor Node + SQLite);
+  - `tests/blobs-store.test.ts` cobre a mesma lógica no caminho da Netlify (núcleo + Netlify Blobs em memória): contas, confirmação e redefinição por link, isolamento entre contas, cópia de segurança, cota e exclusão de conta;
   - os demais cobrem motor de partidas, competições, gestão, editor e persistência, incluindo duas temporadas completas simuladas.
 - **`npm run e2e`**: 20 cenários jogados pela interface real no Chromium, contra o servidor real, um deles num celular com tela de toque. Incluem:
   - criar conta, sair, entrar e encontrar a carreira salva;
