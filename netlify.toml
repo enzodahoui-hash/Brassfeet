@@ -14,8 +14,13 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# Aplicativo de página única: rotas desconhecidas caem no index.html.
-# A função (/api/*) e os arquivos que existem (jogo, ícones, sw.js) têm prioridade sobre esta regra.
+# As rotas de API vão para a função ANTES do catch-all do SPA (senão /api/* cairia no index.html).
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# Aplicativo de página única: as demais rotas desconhecidas caem no index.html.
 [[redirects]]
   from = "/*"
   to = "/index.html"

@@ -40,6 +40,10 @@ function parseCookies(header: string | null): Record<string, string> {
 
 export default async (req: Request, context: Context): Promise<Response> => {
   const url = new URL(req.url);
+  // a função é alcançada via redirect /api/* -> /.netlify/functions/api/:splat; normaliza para /api/...
+  const path = url.pathname.startsWith('/.netlify/functions/api')
+    ? '/api' + url.pathname.slice('/.netlify/functions/api'.length)
+    : url.pathname;
   const headers: Record<string, string> = {};
   req.headers.forEach((v, k) => (headers[k.toLowerCase()] = v));
   const body = req.method === 'GET' || req.method === 'HEAD' ? Buffer.alloc(0) : Buffer.from(await req.arrayBuffer());
@@ -48,7 +52,7 @@ export default async (req: Request, context: Context): Promise<Response> => {
   try {
     r = await core.handle({
       method: req.method,
-      path: url.pathname,
+      path,
       query: url.searchParams,
       headers,
       cookies: parseCookies(req.headers.get('cookie')),
@@ -69,4 +73,5 @@ export default async (req: Request, context: Context): Promise<Response> => {
   return new Response(payload as BodyInit, { status: r.status, headers: h });
 };
 
-export const config: Config = { path: '/api/*' };
+// servida em /.netlify/functions/api; o netlify.toml redireciona /api/* para cá (antes do catch-all do SPA)
+export const config: Config = {};
