@@ -42,6 +42,19 @@ async function waitIdle(timeout = 120000) {
   await page.waitForFunction(() => !window.__fmbr.busy, null, { timeout });
 }
 
+/** Avança até o dia de jogo; decisões e janelas que surgem no caminho são fechadas. */
+async function advanceToMatch(button) {
+  for (let i = 0; i < 15; i++) {
+    if (await page.locator('.choice', { hasText: 'Ao vivo' }).isVisible().catch(() => false)) return;
+    const close = page.locator('.overlay .modal-h button[aria-label="Fechar"]');
+    if (await close.count()) await close.first().click();
+    else await button().click();
+    await page.waitForTimeout(300);
+    await waitIdle(180000);
+  }
+  throw new Error('não chegou ao dia de jogo');
+}
+
 let serverLog = '';
 /** Sobe o servidor real do jogo (site + contas + salvamentos) com um banco temporário. */
 async function startServer() {
@@ -136,9 +149,7 @@ async function main() {
   });
 
   await step('Jogar partida ao vivo e simular até o fim', async () => {
-    await page.locator('header.top button', { hasText: /Continuar|Jogar partida/ }).click();
-    await page.getByText('Ao vivo').first().waitFor({ timeout: 180000 });
-    await waitIdle();
+    await advanceToMatch(() => page.locator('header.top button', { hasText: /Continuar|Jogar partida/ }));
     const id = await game(() => window.__fmbr.pendingMatch);
     await page.locator('.choice', { hasText: 'Ao vivo' }).click();
     await page.getByRole('button', { name: 'Simular até o fim' }).waitFor();
@@ -399,6 +410,7 @@ async function main() {
 
   await step('Esqueci a senha: link por e-mail e nova senha', async () => {
     await page.goto(BASE);
+    await page.locator('.account-bar button').first().waitFor(); // espera a conta carregar
     if (await page.getByRole('button', { name: 'Sair' }).count()) await page.getByRole('button', { name: 'Sair' }).click();
     await page.getByRole('button', { name: 'Entrar', exact: true }).first().click();
     await page.getByRole('button', { name: 'Esqueci a senha' }).click();
@@ -415,14 +427,76 @@ async function main() {
     await page.getByText('Conectado como').waitFor();
   });
 
-  await step('Layout em tela de celular sem rolagem horizontal', async () => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(BASE);
-    await page.locator('.menu-card', { hasText: 'Continuar' }).click();
-    await page.locator('.top-club .name').waitFor({ timeout: 60000 });
-    const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-    ok(over <= 1, `largura excedente ${over}px`);
-    await page.screenshot({ path: `${SHOTS}11-celular.png` });
+  await step('Celular: barra inferior, menu, partida ao vivo com abas e sem rolagem horizontal', async () => {
+    // aparelho de toque de verdade (iPhone 14: 390×844, tela 3×), na mesma conta e carreira
+    const mctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true, storageState: await ctx.storageState() });
+    const desk = page;
+    page = await mctx.newPage();
+    page.on('pageerror', (e) => errors.push(`pageerror (celular): ${e.message}`));
+    try {
+      await page.goto(BASE);
+      await page.locator('.menu-card', { hasText: 'Continuar' }).tap();
+      await page.locator('.top-club .name').waitFor({ timeout: 60000 });
+      const tut = page.getByRole('button', { name: 'Pular tutorial' });
+      if (await tut.isVisible().catch(() => false)) await tut.tap();
+      const over = () => page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      ok((await over()) <= 1, 'sem rolagem horizontal na visão geral');
+      ok(await page.locator('.bottom-nav').isVisible(), 'barra inferior visível');
+      ok(!(await page.locator('header.top .advance-top').isVisible()), 'avançar fica na barra inferior, não no cabeçalho');
+      // navegação pela barra inferior
+      await page.locator('.bottom-nav button', { hasText: 'Elenco' }).tap();
+      await page.getByRole('heading', { name: 'Elenco profissional' }).waitFor();
+      await page.locator('.bottom-nav button', { hasText: 'Táticas' }).tap();
+      await page.getByText('Toque em dois jogadores').waitFor();
+      ok((await over()) <= 1, 'sem rolagem horizontal em Táticas');
+      // menu lateral abre por "Mais" e fecha tocando fora
+      await page.locator('.bottom-nav button', { hasText: 'Mais' }).tap();
+      await page.locator('aside.side.open').waitFor();
+      await page.locator('.scrim').tap({ position: { x: 370, y: 400 } });
+      await page.waitForFunction(() => !window.__fmbr.menuOpen);
+      await page.locator('.bottom-nav button', { hasText: 'Mais' }).tap();
+      await page.locator('nav.nav button', { hasText: 'Finanças' }).tap();
+      await page.waitForFunction(() => window.__fmbr.route.name === 'finance' && !window.__fmbr.menuOpen);
+      // alvos de toque: botões visíveis com pelo menos 32 px
+      const small = await page.evaluate(() => [...document.querySelectorAll('button')].filter((b) => { const r = b.getBoundingClientRect(); return r.width > 0 && r.height > 0 && b.offsetParent && r.height < 32; }).length);
+      ok(small === 0, `botões pequenos demais para o dedo: ${small}`);
+      // jogar uma partida ao vivo pelo celular
+      // avança até o dia de jogo (decisões e janelas no caminho são fechadas)
+      await advanceToMatch(() => page.locator('.bottom-nav .advance'));
+      await page.screenshot({ path: `${SHOTS}11a-celular-dia-de-jogo.png` });
+      await page.locator('.choice', { hasText: 'Ao vivo' }).tap();
+      await page.locator('.live-tabs').waitFor();
+      ok(!(await page.locator('.bottom-nav').isVisible().catch(() => false)), 'barra inferior some durante a partida');
+      await page.waitForTimeout(1200);
+      for (const t of ['Estatísticas', 'Tática', 'Trocas', 'Em campo', 'Lances']) {
+        await page.locator('.live-tabs button', { hasText: t }).tap();
+        ok((await page.locator('.live-sec.on').count()) === 1, `aba ${t} mostra uma seção`);
+      }
+      const head = await page.locator('.live-head').boundingBox();
+      ok(head && head.height < 844 * 0.4, `placar fixo ocupa menos de 40% da tela (${Math.round(head?.height ?? 0)} px)`);
+      ok((await over()) <= 1, 'sem rolagem horizontal na partida');
+      await page.screenshot({ path: `${SHOTS}11b-celular-ao-vivo.png` });
+      await page.locator('.live-controls button', { hasText: 'Substituição' }).tap();
+      await page.getByRole('button', { name: 'Voltar ao jogo' }).tap();
+      await page.locator('.live-controls button', { hasText: 'Simular até o fim' }).tap();
+      await page.getByRole('button', { name: 'Ver relatório da partida' }).tap();
+      await page.locator('.bottom-nav').waitFor();
+      await page.screenshot({ path: `${SHOTS}11c-celular-relatorio.png` });
+      // aplicativo instalável: manifesto e service worker publicados pelo servidor
+      const pwa = await page.evaluate(async () => {
+        const m = await fetch('/manifest.webmanifest').then((r) => r.json());
+        const sw = await fetch('/sw.js').then((r) => r.status);
+        return { name: m.name, icons: m.icons.length, display: m.display, sw };
+      });
+      ok(pwa.icons >= 3 && pwa.display === 'standalone' && pwa.sw === 200, 'manifesto e service worker disponíveis');
+    } catch (e) {
+      await page.screenshot({ path: `${SHOTS}falha-celular.png` }).catch(() => {});
+      throw e;
+    } finally {
+      await page.close();
+      await mctx.close();
+      page = desk;
+    }
   });
 
   await browser.close();

@@ -80,6 +80,12 @@ export function StartScreen() {
           <Icon name="upload" />
           <div><div className="t">Importar carreira</div><div className="d">Abrir um arquivo .json exportado</div></div>
         </button>
+        {s.installPrompt && (
+          <button className="menu-card" onClick={() => void s.installApp()}>
+            <Icon name="download" />
+            <div><div className="t">Instalar aplicativo</div><div className="d">Ícone na tela inicial, tela cheia e abre sem internet</div></div>
+          </button>
+        )}
         <input ref={fileRef} type="file" accept=".json,application/json" hidden onChange={(e) => e.target.files?.[0] && void importFile(e.target.files[0])} />
         {!s.storageOk && <div className="chip warn">Armazenamento local bloqueado: o progresso não será salvo neste navegador.</div>}
       </section>
