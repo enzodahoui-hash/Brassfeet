@@ -1,7 +1,7 @@
 // Service worker: deixa o jogo abrir rápido e funcionar sem internet depois da primeira visita.
 // Página: rede primeiro (sempre a versão nova quando há conexão). Arquivos com hash em /assets/: cache primeiro.
 // A API de contas (/api) nunca passa pelo cache.
-const CACHE = 'fmbr-v1';
+const CACHE = 'fmbr-v3'; // troque a versão a cada release para forçar a atualização nos aparelhos
 const SHELL = ['/', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon.svg'];
 
 self.addEventListener('install', (e) => {
