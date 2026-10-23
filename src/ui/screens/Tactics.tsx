@@ -89,7 +89,7 @@ export function Tactics() {
         </>} />
       <div className="grid g-main">
         <div className="stack">
-          <Panel title={`Formação ${formation}`} right={<span className="small muted">Clique em dois jogadores para trocá-los</span>}>
+          <Panel title={`Formação ${formation}`} right={<span className="small muted">Toque em dois jogadores para trocá-los</span>}>
             <div className="row" style={{ alignItems: 'flex-start', gap: 16 }}>
               <div className="pitch" style={{ flex: '1 1 320px' }}>
                 <svg className="lines" viewBox="0 0 68 100" preserveAspectRatio="none" aria-hidden>
@@ -105,7 +105,7 @@ export function Tactics() {
                   const note = p ? availabilityNote(p, compId) : 'vaga';
                   const isSel = sel?.kind === 'slot' && sel.idx === i;
                   return (
-                    <div key={i} className={`slot ${isSel ? 'sel' : ''} ${p ? '' : 'empty'}`} style={{ left: `${sl.x}%`, top: `${100 - sl.y}%` }} onClick={() => pick('slot', i, p?.id ?? null)} title={p ? `${p.name} · ${sl.pos} · encaixe ${Math.round(fit * 100)}%` : 'Posição vazia'}>
+                    <div key={i} className={`slot ${isSel ? 'sel' : ''} ${p ? '' : 'empty'}`} style={{ left: `${sl.x}%`, top: `${4 + (100 - sl.y) * 0.88}%` }} onClick={() => pick('slot', i, p?.id ?? null)} title={p ? `${p.name} · ${sl.pos} · encaixe ${Math.round(fit * 100)}%` : 'Posição vazia'}>
                       <MiniShirt design={sl.pos === 'GK' ? currentCollection(c).gk : kit} number={p?.shirt} size={34} />
                       <span className="nm">{p ? p.name.split(' ').slice(-1)[0] : '—'}</span>
                       <span className="meta"><PosB pos={sl.pos} />{p && <Lvl v={ovrToLevel(slotRating(p, sl.pos))} size="sm" />}{(note || (p && fit < 0.8)) && <span className="warnb" title={note ?? 'Fora de posição'} />}</span>

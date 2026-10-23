@@ -50,6 +50,27 @@ Também dá para usar Docker: `docker compose up -d --build`. Em Render, Railway
 
 Uma hospedagem só de arquivos estáticos (o conteúdo de `dist/`) também roda o jogo, mas sem contas. Nesse caso, o progresso fica no navegador.
 
+## Jogar no celular
+
+O jogo foi ajustado para telas de toque (testado num iPhone simulado de 390 px):
+
+- **Barra inferior** com Início, Elenco, Táticas e Mais (menu completo). O botão grande do meio é **Continuar / Jogar**, ao alcance do polegar.
+- **Menu lateral** abre por "Mais" ou pelo ☰ e fecha tocando fora dele.
+- **Partida ao vivo**:
+  - o placar e os controles ficam fixos no topo;
+  - o resto se divide em abas: Lances, Estatísticas, Tática, Trocas e Em campo;
+  - em gol, o placar pisca e o celular vibra;
+  - a tela não apaga enquanto a partida corre.
+- **Toque**:
+  - botões e campos com pelo menos ~40 px;
+  - campos com letra de 16 px, para o iPhone não dar zoom;
+  - janelas abrem como painéis que sobem da base da tela;
+  - avisos aparecem no topo e fecham com um toque.
+- **Instalar como aplicativo** (PWA):
+  - no site com servidor, o navegador oferece "Instalar aplicativo" (Android/Chrome/Edge). No iPhone, use Compartilhar → "Adicionar à Tela de Início";
+  - o jogo abre em tela cheia, com ícone próprio;
+  - depois da primeira visita, abre mesmo sem internet. Sem conta, o progresso fica no aparelho.
+
 ## Contas e salvamentos
 
 - **Contas**:
@@ -111,13 +132,13 @@ Abas: Jogadores, Clubes (com construtor de escudo), Competições, Prêmios e re
   - `tests/subs-stats.test.ts` cobre os 13 testes exigidos de substituições e estatísticas;
   - `tests/server.test.ts` cobre contas, e-mails, sessões, CSRF, limite de tentativas, cota e uma carreira real salva e carregada pela conta;
   - os demais cobrem motor de partidas, competições, gestão, editor e persistência, incluindo duas temporadas completas simuladas.
-- **`npm run e2e`**: 20 cenários jogados pela interface real no Chromium, contra o servidor real. Incluem:
+- **`npm run e2e`**: 20 cenários jogados pela interface real no Chromium, contra o servidor real, um deles num celular com tela de toque. Incluem:
   - criar conta, sair, entrar e encontrar a carreira salva;
   - esqueci a senha, com o link capturado do e-mail;
   - regras de substituição em Táticas;
   - estatísticas do elenco e comparação;
   - temporada completa;
-  - layout em celular.
+  - celular: barra inferior, menu, partida ao vivo com abas, alvos de toque e PWA.
 
   As capturas ficam em `e2e/shots/`.
 

@@ -238,8 +238,8 @@ export function Confirm({ title, text, confirmLabel = 'Confirmar', danger, onYes
 export function Toasts() {
   const s = useGame();
   return (
-    <div className="toasts" aria-live="polite">
-      {s.toasts.map((t) => <div key={t.id} className={`toast ${t.kind === 'err' ? 'err' : t.kind === 'warn' ? 'warn' : ''}`}>{t.text}</div>)}
+    <div className={`toasts ${s.live ? "in-live" : ""}`} aria-live="polite">
+      {s.toasts.map((t) => <div key={t.id} className={`toast ${t.kind === 'err' ? 'err' : t.kind === 'warn' ? 'warn' : ''}`} onClick={() => { s.toasts = s.toasts.filter((x) => x.id !== t.id); s.bump(); }}>{t.text}</div>)}
     </div>
   );
 }

@@ -71,6 +71,8 @@ class GameStore {
   sm: SaveManager;
   storageOk = true;
   menuOpen = false;
+  /** Evento do navegador que permite instalar o jogo como aplicativo (Android/Chrome/Edge). */
+  installPrompt: { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> } | null = null;
   seasonSummary: SeasonSummary | null = null;
   settings: Settings = loadSettings();
   editorWorld: World | null = null;
@@ -186,6 +188,16 @@ class GameStore {
     const map: Record<string, ScreenName> = { club: 'home', comp: 'comp', player: 'player', match: 'match', awards: 'awards', market: 'market', youth: 'youth', finance: 'finance', stadium: 'stadium', infra: 'infra', kits: 'kits', squad: 'squad', editor: 'editor', history: 'history' };
     const name = map[n.link.screen] ?? 'home';
     this.go({ name, id: n.link.id });
+  }
+
+  async installApp(): Promise<void> {
+    const ev = this.installPrompt;
+    if (!ev) return;
+    await ev.prompt();
+    const r = await ev.userChoice.catch(() => ({ outcome: 'dismissed' }));
+    this.installPrompt = null;
+    this.bump();
+    if (r.outcome === 'accepted') this.toast('Jogo instalado! Abra pelo ícone na tela inicial.');
   }
 
   toast(text: string, kind: Toast['kind'] = 'ok'): void {

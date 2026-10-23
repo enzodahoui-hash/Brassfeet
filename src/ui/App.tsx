@@ -86,10 +86,14 @@ function Shell() {
   const todayMatch = userFixtureToday(c);
   const badge: Partial<Record<ScreenName, number>> = { inbox: decisions, market: offers, youth: c.intakeCandidates.length };
   const inLive = s.route.name === 'live';
+  const playNow = !!(todayMatch || s.pendingMatch);
+  const closeMenu = () => { s.menuOpen = false; s.bump(); };
+  const moreBadge = decisions + offers + c.intakeCandidates.length;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
+      if (e.key === 'Escape' && s.menuOpen) closeMenu();
       if (e.key === ' ' && !s.live && !s.busy) {
         e.preventDefault();
         void s.advance('next');
@@ -108,6 +112,7 @@ function Shell() {
             <div className="brand-name">{c.config.gameName}</div>
             <div className="brand-sub">Temporada {c.season}</div>
           </div>
+          <button className="icon-btn side-close" style={{ display: 'none' }} onClick={closeMenu} aria-label="Fechar menu"><Icon name="close" /></button>
         </div>
         <nav className="nav" aria-label="Menu principal">
           {NAV.map((g) => (
@@ -124,11 +129,13 @@ function Shell() {
           ))}
           <div className="nav-group">Sessão</div>
           <button onClick={() => void s.save(true)} disabled={s.saving || inLive}><Icon name="save" />{s.saving ? 'Salvando…' : 'Salvar agora'}</button>
+          {s.installPrompt && <button onClick={() => void s.installApp()}><Icon name="download" />Instalar aplicativo</button>}
           <button onClick={() => s.closeCareer()} disabled={inLive}><Icon name="back" />Menu inicial</button>
         </nav>
       </aside>
+      {s.menuOpen && <div className="scrim" onClick={closeMenu} aria-hidden="true" />}
       <header className="top">
-        <button className="icon-btn menu-toggle" onClick={() => { s.menuOpen = !s.menuOpen; s.bump(); }} aria-label="Abrir menu"><Icon name="menu" /></button>
+        <button className="icon-btn menu-toggle" onClick={() => { s.menuOpen = !s.menuOpen; s.bump(); }} aria-label="Abrir menu" aria-expanded={s.menuOpen}><Icon name="menu" /></button>
         <div className="top-club" onClick={() => s.go({ name: 'home' })} style={{ cursor: 'pointer' }}>
           <Crest crest={club.crest} size={34} />
           <div style={{ minWidth: 0 }}>
@@ -140,19 +147,31 @@ function Shell() {
           <div className="stat-mini hide-m"><span className="k">Saldo</span><span className="v"><Money v={club.balance} color /></span></div>
           <div className="stat-mini hide-m"><span className="k">Diretoria</span><span className="v" style={{ color: club.board.confidence < 30 ? 'var(--loss)' : club.board.confidence < 55 ? 'var(--draw)' : 'var(--win)' }}>{Math.round(club.board.confidence)}%</span></div>
           {!inLive && (
-            <>
+            <div className="row tight advance-top" style={{ flexWrap: 'nowrap' }}>
               <button className="btn hide-m" onClick={() => void s.advance('day')} disabled={!!s.busy} title="Avançar um dia"><Icon name="day" />Dia</button>
               <button className={`btn ${todayMatch || s.pendingMatch ? 'go' : 'primary'}`} onClick={() => void s.advance('next')} disabled={!!s.busy} title="Avançar até o próximo jogo (atalho: espaço)">
                 <Icon name={todayMatch || s.pendingMatch ? 'ball' : 'ff'} />
                 {todayMatch || s.pendingMatch ? 'Jogar partida' : 'Continuar'}
               </button>
-            </>
+            </div>
           )}
         </div>
       </header>
       <main className="main">
         <Screen />
       </main>
+      {!inLive && (
+        <nav className="bottom-nav" aria-label="Atalhos">
+          {([['home', 'Início', 'home'], ['squad', 'Elenco', 'squad']] as const).map(([id, label, icon]) => (
+            <button key={id} className={s.route.name === id ? 'on' : ''} onClick={() => s.go({ name: id })}><Icon name={icon} />{label}</button>
+          ))}
+          <button className={`advance ${playNow ? 'go' : ''}`} onClick={() => void s.advance('next')} disabled={!!s.busy} aria-label={playNow ? 'Jogar partida' : 'Continuar'}>
+            <Icon name={playNow ? 'ball' : 'ff'} />{playNow ? 'Jogar' : 'Continuar'}
+          </button>
+          <button className={s.route.name === 'tactics' ? 'on' : ''} onClick={() => s.go({ name: 'tactics' })}><Icon name="tactics" />Táticas</button>
+          <button className={s.menuOpen ? 'on' : ''} onClick={() => { s.menuOpen = true; s.bump(); }} aria-label="Mais opções"><Icon name="menu" />Mais{moreBadge > 0 && <span className="badge">{moreBadge}</span>}</button>
+        </nav>
+      )}
       {s.pendingMatch && !s.live && <PreMatch id={s.pendingMatch} />}
       {s.seasonSummary && <SeasonSummaryModal />}
       {c.firedPending && !s.seasonSummary && <FiredModal />}
