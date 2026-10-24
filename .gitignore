@@ -11,3 +11,9 @@ scripts/real/wiki/
 scripts/real/*.json
 scripts/real/*.log
 *.tar.gz
+
+# graphify: grafo versionado parcialmente (ver GRAPH_REPORT.md)
+graphify-out/graph.html
+graphify-out/cache/
+graphify-out/.graphify_python
+graphify-out/.graphify_root
