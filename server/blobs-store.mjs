@@ -28,7 +28,9 @@ function withRetry(s) {
 }
 
 export function blobsStore({ getStore }) {
-  const open = (name) => withRetry(getStore({ name, consistency: 'strong' }));
+  // consistência padrão (eventual): servida na borda, mais estável e menos sujeita a throttle.
+  // As escritas ficam disponíveis na hora; só a propagação de sobrescritas/exclusões leva até ~60s.
+  const open = (name) => withRetry(getStore({ name }));
   const users = open('fmbr_users'); // id → {id,email,name,pass,verified,created}
   const emails = open('fmbr_emails'); // sha(email) → id
   const sessions = open('fmbr_sessions'); // tokenHash → {user_id,expires}
