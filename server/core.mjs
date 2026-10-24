@@ -217,14 +217,22 @@ export function createCore({ cfg, store, mailer, mailConfigured = () => false })
         const prev = await store.kvGet(user.id, kvStore, id);
         const used = (await store.kvUsage(user.id)) - (prev?.size ?? 0) + payload.length;
         if (used > quotaBytes) return fail(413, `Espaço da conta esgotado (${cfg.quotaMb} MB). Exclua salvamentos antigos.`);
-        // cópia de segurança automática da versão anterior de cada carreira
-        if (kvStore === 'careers' && prev) await store.kvPut(user.id, 'backups', id, prev.meta, prev.payload, prev.compressed, prev.size, now());
+        // cópia de segurança automática da versão anterior de cada carreira (todas as partes)
+        if (kvStore === 'careers' && !id.includes('.part')) {
+          for (const o of (await store.kvList(user.id, 'careers')).filter((r) => r.id === id || r.id.startsWith(`${id}.part`))) {
+            const rec = await store.kvGet(user.id, 'careers', o.id);
+            if (rec) await store.kvPut(user.id, 'backups', o.id, rec.meta, rec.payload, rec.compressed, rec.size, now());
+          }
+        }
         await store.kvPut(user.id, kvStore, id, JSON.stringify(meta), payload, req.headers['x-compressed'] === '1' ? 1 : 0, payload.length, now());
         return json(200, { ok: true });
       }
       if (id && method === 'DELETE') {
         await store.kvDel(user.id, kvStore, id);
-        if (kvStore === 'careers') await store.kvDel(user.id, 'backups', id);
+        // ao apagar a base de uma carreira, remove também as partes da cópia de segurança
+        if (kvStore === 'careers' && !id.includes('.part')) {
+          for (const o of (await store.kvList(user.id, 'backups')).filter((r) => r.id === id || r.id.startsWith(`${id}.part`))) await store.kvDel(user.id, 'backups', o.id);
+        }
         return json(200, { ok: true });
       }
     }

@@ -135,6 +135,36 @@ describe('Contas por e-mail', () => {
     }
   }, 60_000);
 
+  test('carreira grande é dividida em pedaços e carregada íntegra (cópia de segurança e exclusão)', async () => {
+    const a = client();
+    await a('/api/auth/login', { method: 'POST', json: { email: 'ana@exemplo.com', password: 'segredo123' } });
+    const orig = globalThis.fetch;
+    globalThis.fetch = ((u: string, init: RequestInit = {}) => a(String(u), init)) as typeof fetch;
+    try {
+      const c = career('flamengo', 'grande-1');
+      const sm = new SaveManager(remoteKV('/api/kv', 1024 * 1024)); // pedaços de 1 MB forçam a divisão
+      await sm.saveCareer(c);
+      c.saveName = 'v2';
+      await sm.saveCareer(c); // segunda gravação gera cópia de segurança com partes
+      const list = await sm.listCareers();
+      expect(list.filter((x) => x.id.includes('.part'))).toHaveLength(0); // partes não aparecem na lista
+      expect(list.find((x) => x.id === 'grande-1')?.name).toBe('v2');
+      const { career: back } = await sm.loadCareer('grande-1');
+      expect(back.userClubId).toBe('flamengo');
+      expect(Object.keys(back.players).length).toBe(Object.keys(c.players).length);
+      // a cópia de segurança (também em pedaços) carrega íntegra
+      const backup = await remoteKV('/api/kv').get('backups', 'grande-1');
+      expect(backup).toBeTruthy();
+      await sm.deleteCareer('grande-1');
+      const kv = remoteKV('/api/kv');
+      expect(await kv.get('careers', 'grande-1')).toBeUndefined();
+      expect(await kv.get('careers', 'grande-1.part1')).toBeUndefined();
+      expect(await kv.get('backups', 'grande-1.part1')).toBeUndefined();
+    } finally {
+      globalThis.fetch = orig;
+    }
+  }, 60_000);
+
   test('troca de senha encerra outras sessões; exclusão apaga conta e salvamentos', async () => {
     const a = client();
     const other = client();

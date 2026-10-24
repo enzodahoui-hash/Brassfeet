@@ -53,13 +53,13 @@ export function Saves() {
       <Panel flush>
         <Table rows={s.saves} rowKey={(r) => r.id} rowCls={(r) => (r.id === c.id ? 'sel' : '')} cols={[
           { key: 'n', label: 'Salvamento', render: (r) => <span><strong>{r.name}</strong>{r.id === c.id && <span className="chip good" style={{ marginLeft: 6 }}>atual</span>}</span> },
-          { key: 'c', label: 'Clube', render: (r) => r.clubName },
-          { key: 's', label: 'Data no jogo', render: (r) => fmtDay(r.day) },
-          { key: 'm', label: 'Treinador', render: (r) => r.manager },
-          { key: 'u', label: 'Gravado em', render: (r) => <span className="small">{new Date(r.updated).toLocaleString('pt-BR')}</span> },
-          { key: 'v', label: 'Versão', render: (r) => r.schemaVersion, cls: 'n' },
-          { key: 'b', label: 'Tamanho', render: (r) => `${(r.bytes / 1e6).toFixed(1)} MB`, cls: 'n' },
-          { key: 'a', label: '', render: (r) => (
+          { key: 'c', label: 'Clube', render: (r) => r.clubName, cls: 'hide-m' },
+          { key: 's', label: 'Data no jogo', render: (r) => fmtDay(r.day), cls: 'hide-m' },
+          { key: 'm', label: 'Treinador', render: (r) => r.manager, cls: 'hide-m' },
+          { key: 'u', label: 'Gravado em', render: (r) => <span className="small">{new Date(r.updated).toLocaleString('pt-BR')}</span>, cls: 'hide-m' },
+          { key: 'v', label: 'Versão', render: (r) => r.schemaVersion, cls: 'n hide-m' },
+          { key: 'b', label: 'Tamanho', render: (r) => `${(r.bytes / 1e6).toFixed(1)} MB`, cls: 'n hide-m' },
+          { key: 'a', label: '', cls: 'act-col', render: (r) => (
             <span className="row tight">
               {r.id !== c.id && <button className="btn sm" onClick={() => setLoad(r.id)}>Carregar</button>}
               <button className="btn sm" onClick={() => setRename({ id: r.id, name: r.name })}>Renomear</button>

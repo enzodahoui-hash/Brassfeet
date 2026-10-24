@@ -131,14 +131,18 @@ export function blobsStore({ getStore }) {
       }
       return used;
     },
-    // limitador por janela: melhor esforço (Blobs não tem contador atômico; sob corrida, no máximo um pouco leniente)
+    // limitador por janela: melhor esforço. Se o Blobs falhar aqui, libera (não derruba o login por causa do limitador).
     async rate(key, max, windowMs) {
-      const k = sha(key);
-      const t = Date.now();
-      const arr = ((await getJson(rate, k)) ?? []).filter((x) => t - x < windowMs);
-      arr.push(t);
-      await rate.setJSON(k, arr);
-      return arr.length <= max;
+      try {
+        const k = sha(key);
+        const t = Date.now();
+        const arr = ((await getJson(rate, k)) ?? []).filter((x) => t - x < windowMs);
+        arr.push(t);
+        await rate.setJSON(k, arr);
+        return arr.length <= max;
+      } catch {
+        return true;
+      }
     },
   };
 }
