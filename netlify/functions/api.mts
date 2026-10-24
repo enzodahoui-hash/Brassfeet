@@ -62,9 +62,7 @@ export default async (req: Request, context: Context): Promise<Response> => {
   } catch (e) {
     const status = (e as { status?: number }).status ?? 500;
     if (status === 500) console.error(e);
-    // DIAGNÓSTICO TEMPORÁRIO: expõe a mensagem do erro no corpo do 500 (reverter depois)
-    const detail = `${(e as Error).name}: ${(e as Error).message}`.slice(0, 300);
-    r = { status, body: { error: status === 500 ? 'Erro interno. Tente novamente.' : (e as Error).message, detail } };
+    r = { status, body: { error: status === 500 ? 'Erro interno. Tente novamente.' : (e as Error).message } };
   }
 
   const h = new Headers({ 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });

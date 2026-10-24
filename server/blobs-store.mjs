@@ -6,8 +6,29 @@ import { createHash, randomBytes } from 'node:crypto';
 const sha = (s) => createHash('sha256').update(String(s)).digest('hex');
 const newId = () => randomBytes(9).toString('base64url');
 
+// O Netlify Blobs às vezes falha de forma intermitente (throttle/instabilidade); repetir algumas
+// vezes com uma pequena espera evita que um blip derrube login/salvamento.
+async function retry(fn, tries = 4) {
+  let last;
+  for (let i = 0; i < tries; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      last = e;
+      await new Promise((r) => setTimeout(r, 150 * (i + 1)));
+    }
+  }
+  throw last;
+}
+const OPS = ['get', 'set', 'setJSON', 'getMetadata', 'getWithMetadata', 'list', 'delete'];
+function withRetry(s) {
+  const out = {};
+  for (const op of OPS) out[op] = (...a) => retry(() => s[op](...a));
+  return out;
+}
+
 export function blobsStore({ getStore }) {
-  const open = (name) => getStore({ name, consistency: 'strong' });
+  const open = (name) => withRetry(getStore({ name, consistency: 'strong' }));
   const users = open('fmbr_users'); // id → {id,email,name,pass,verified,created}
   const emails = open('fmbr_emails'); // sha(email) → id
   const sessions = open('fmbr_sessions'); // tokenHash → {user_id,expires}
