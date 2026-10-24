@@ -169,8 +169,12 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
   text-align: left; font-weight: 600; color: var(--muted); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em;
   padding: 6px 8px; border-bottom: 1px solid var(--line-2); position: sticky; top: 0; background: var(--panel); white-space: nowrap; z-index: 1;
 }
-.tbl th.sortable { cursor: pointer; user-select: none; }
-.tbl th.sortable:hover { color: var(--text); }
+.tbl th.sortable { padding: 0; }
+.th-sort {
+  display: block; width: 100%; padding: 6px 8px; background: transparent; border: 0; cursor: pointer; user-select: none;
+  color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; text-align: inherit; white-space: nowrap;
+}
+.th-sort:hover { color: var(--text); }
 .tbl th.sorted { color: var(--accent); }
 .tbl td { padding: 5px 8px; border-bottom: 1px solid #172a20; white-space: nowrap; vertical-align: middle; }
 .tbl tr:hover td { background: #13241b; }
@@ -211,8 +215,11 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 .posb.M { background: #3fb072; color: #031208; }
 .posb.A { background: #e05b52; color: #1c0503; }
 .pname { display: inline-flex; align-items: center; gap: 4px; }
+button.link { background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
 .pname .link { cursor: pointer; }
 .pname .link:hover { text-decoration: underline; text-decoration-color: var(--accent); }
+.clubname-btn { background: none; border: 0; padding: 0; margin: 0; font: inherit; }
+.clubname-btn:hover { text-decoration: underline; text-decoration-color: var(--accent); }
 .stars { display: inline-flex; gap: 1px; align-items: center; }
 .star-ico { width: 13px; height: 13px; cursor: help; flex: none; }
 .cond { display: inline-block; width: 46px; height: 6px; background: #1c3227; border-radius: 3px; overflow: hidden; vertical-align: middle; }
@@ -455,6 +462,7 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
   .btn { min-height: 40px; padding: 8px 13px; font-size: 14px; }
   .btn.sm { min-height: 36px; padding: 6px 11px; font-size: 13px; }
   .icon-btn { min-width: 40px; min-height: 40px; align-items: center; justify-content: center; }
+  .th-sort { min-height: 38px; }
   .tabs { scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent); }
   .tabs::-webkit-scrollbar { display: none; }
   .tabs button { padding: 11px 14px; font-size: 14px; }

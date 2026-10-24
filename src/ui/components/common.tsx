@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
 import type { Career, Player, Pos, World } from '../../engine/types';
 import { POS_LINE, POS_SHORT, POS_NAME, ovrToLevel, playerLevel } from '../../engine/players/attributes';
 import { fmtMoney } from '../../engine/finance/ledger';
@@ -78,12 +78,14 @@ export function PName({ p, link = true, club = false }: { p: Player; link?: bool
   const clubObj = club && p.clubId && c ? c.clubs[p.clubId] : null;
   return (
     <span className="pname">
-      <span className={link ? 'link' : ''} onClick={link ? (e) => { e.stopPropagation(); store.go({ name: 'player', id: p.id }); } : undefined}>
-        {p.name}
-      </span>
+      {link ? (
+        <button type="button" className="link" onClick={(e) => { e.stopPropagation(); store.go({ name: 'player', id: p.id }); }}>{p.name}</button>
+      ) : (
+        <span>{p.name}</span>
+      )}
       <Stars p={p} />
-      {p.origin === 'creator' && <span className="chip star" data-tip="Criado no Criador de Craques (edição livre)">CC</span>}
-      {p.injury && <span data-tip={`${p.injury.name}: ${Math.ceil(p.injury.daysLeft)} dias`}><Icon name="injury" className="star-ico" /></span>}
+      {p.origin === 'creator' && <span className="chip star" tabIndex={0} aria-label="Craque criado no Criador de Craques (edição livre)" data-tip="Criado no Criador de Craques (edição livre)">CC</span>}
+      {p.injury && <span role="img" tabIndex={0} aria-label={`Lesão: ${p.injury.name}, ${Math.ceil(p.injury.daysLeft)} dias`} data-tip={`${p.injury.name}: ${Math.ceil(p.injury.daysLeft)} dias`}><Icon name="injury" className="star-ico" /></span>}
       {clubObj && <span className="muted small">· {clubObj.short}</span>}
     </span>
   );
@@ -94,11 +96,13 @@ export function ClubName({ id, crest = true, short = false, link = true }: { id:
   const club = c?.clubs[id];
   if (!club) return <span className="muted">—</span>;
   const me = c?.userClubId === id;
+  const style = { display: 'inline-flex', flexWrap: 'nowrap' as const, alignItems: 'center', fontWeight: me ? 700 : undefined, color: me ? 'var(--accent)' : undefined };
+  const inner = <>{crest && <Crest crest={club.crest} size={18} />}<span>{short ? club.short : club.name}</span></>;
+  if (!link) return <span className="row tight" style={style}>{inner}</span>;
   return (
-    <span className="row tight" style={{ display: 'inline-flex', flexWrap: 'nowrap', cursor: link ? 'pointer' : undefined, fontWeight: me ? 700 : undefined, color: me ? 'var(--accent)' : undefined }} onClick={link ? (e) => { e.stopPropagation(); store.go({ name: 'clubview', id }); } : undefined}>
-      {crest && <Crest crest={club.crest} size={18} />}
-      <span>{short ? club.short : club.name}</span>
-    </span>
+    <button type="button" className="row tight clubname-btn" style={{ ...style, cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); store.go({ name: 'clubview', id }); }}>
+      {inner}
+    </button>
   );
 }
 
@@ -151,9 +155,14 @@ export function Table<T>({ rows, cols, rowKey, onRow, rowCls, initialSort, empty
         <thead>
           <tr>
             {cols.map((c) => (
-              <th key={c.key} className={`${c.cls ?? ''} ${c.sort ? 'sortable' : ''} ${sort?.key === c.key ? 'sorted' : ''}`} title={c.tip} onClick={c.sort ? () => setSort((s) => ({ key: c.key, dir: s?.key === c.key ? (-s.dir as 1 | -1) : -1 })) : undefined}>
-                {c.label}
-                {sort?.key === c.key ? (sort.dir === 1 ? ' ▲' : ' ▼') : ''}
+              <th key={c.key} className={`${c.cls ?? ''} ${c.sort ? 'sortable' : ''} ${sort?.key === c.key ? 'sorted' : ''}`} aria-sort={c.sort ? (sort?.key === c.key ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none') : undefined}>
+                {c.sort ? (
+                  <button type="button" className="th-sort" title={c.tip} onClick={() => setSort((s) => ({ key: c.key, dir: s?.key === c.key ? (-s.dir as 1 | -1) : -1 }))}>
+                    {c.label}{sort?.key === c.key ? (sort.dir === 1 ? ' ▲' : ' ▼') : ''}
+                  </button>
+                ) : (
+                  <span title={c.tip}>{c.label}</span>
+                )}
               </th>
             ))}
           </tr>
@@ -202,21 +211,54 @@ export function PageHead({ title, sub, actions, back }: { title: ReactNode; sub?
 }
 
 export function Tabs<T extends string>({ tabs, value, onChange }: { tabs: { id: T; label: ReactNode }[]; value: T; onChange: (v: T) => void }) {
+  const onKey = (e: ReactKeyboardEvent<HTMLButtonElement>, i: number) => {
+    const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : e.key === 'Home' ? -Infinity : e.key === 'End' ? Infinity : 0;
+    if (!dir) return;
+    e.preventDefault();
+    const ni = dir === -Infinity ? 0 : dir === Infinity ? tabs.length - 1 : (i + dir + tabs.length) % tabs.length;
+    onChange(tabs[ni].id);
+    const btns = e.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('button[role="tab"]');
+    btns?.[ni]?.focus();
+  };
   return (
     <div className="tabs" role="tablist">
-      {tabs.map((t) => (
-        <button key={t.id} role="tab" aria-selected={value === t.id} className={value === t.id ? 'on' : ''} onClick={() => onChange(t.id)}>{t.label}</button>
+      {tabs.map((t, i) => (
+        <button key={t.id} role="tab" aria-selected={value === t.id} tabIndex={value === t.id ? 0 : -1} className={value === t.id ? 'on' : ''} onClick={() => onChange(t.id)} onKeyDown={(e) => onKey(e, i)}>{t.label}</button>
       ))}
     </div>
   );
 }
 
+let modalSeq = 0;
 export function Modal({ title, onClose, children, footer, size }: { title: ReactNode; onClose: () => void; children: ReactNode; footer?: ReactNode; size?: 'wide' | 'narrow' }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const titleId = useRef(`modal-title-${++modalSeq}`).current;
+  const labelled = typeof title === 'string';
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    const prev = document.activeElement as HTMLElement | null;
+    const focusables = () =>
+      Array.from(node.querySelectorAll<HTMLElement>('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')).filter((el) => el.offsetParent !== null);
+    (focusables()[0] ?? node).focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { e.stopPropagation(); onClose(); return; }
+      if (e.key === ' ') { e.stopPropagation(); return; } // não deixa o atalho global (espaço = avançar) agir com um modal aberto
+      if (e.key !== 'Tab') return;
+      const f = focusables();
+      if (!f.length) { e.preventDefault(); node.focus(); return; }
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+    node.addEventListener('keydown', onKey);
+    return () => { node.removeEventListener('keydown', onKey); prev?.focus?.(); };
+  }, [onClose]);
   return (
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className={`modal ${size ?? ''}`} role="dialog" aria-modal="true">
+      <div ref={ref} className={`modal ${size ?? ''}`} role="dialog" aria-modal="true" aria-labelledby={labelled ? titleId : undefined} tabIndex={-1}>
         <div className="modal-h">
-          {typeof title === 'string' ? <h2>{title}</h2> : title}
+          {labelled ? <h2 id={titleId}>{title}</h2> : title}
           <span className="spacer" />
           <button className="icon-btn" onClick={onClose} aria-label="Fechar"><Icon name="close" /></button>
         </div>
