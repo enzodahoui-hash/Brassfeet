@@ -1,28 +1,28 @@
 # Graph Report - Brassfeet  (2026-10-24)
 
 ## Corpus Check
-- 284 files · ~388,487 words
+- 287 files · ~389,966 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 44 file(s) not represented in the graph (top: .csv 37, (none) 4, .toml 1)
 
 ## Summary
-- 2911 nodes · 7910 edges · 185 communities (105 shown, 80 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 187 edges (avg confidence: 0.87)
+- 2935 nodes · 7947 edges · 180 communities (100 shown, 80 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 189 edges (avg confidence: 0.87)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `65523cf0`
+- Built from commit: `a1d4f2b3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - App.tsx
 - management.test.ts
-- Live Match Simulation
+- GameStore
 - Match Engine & Lineups
-- stats.ts
+- matches.ts
 - types.ts
-- Editor.tsx
+- useGame
 - attributes.ts
 - Player Attributes & Ratings
 - Shared UI Components
@@ -35,20 +35,20 @@
 - Awards Computation
 - Wiki Article Scripts
 - Lineup UI Components
-- test_data_contracts.py
+- Editor.tsx
 - nations.ts
-- Package Dev Dependencies
+- clamp
 - Node HTTP Server
 - Player Level Graphics
 - Progression & Finances
 - Competition Defaults
 - Board & Season Setup
 - Universe Editor
-- clamp
+- advance.ts
 - Lineup Logic
 - Netlify API Config
-- academy.ts
-- Auth Core Server
+- season.ts
+- engine.ts
 - Fetch Template Scripts
 - Server-Side Request Forgery (SSRF) Prevention Reference
 - core.py
@@ -70,29 +70,29 @@
 - Alt Fetch Scripts
 - Player QID Scripts
 - Cross-Site Request Forgery (CSRF) Prevention Reference
-- test_core_data_quality.py
+- SaveManager
 - useCareer
-- editor.ts
+- storage.ts
 - Known Levels Data
 - Service Worker
 - Football Manager BR (nome provisório)
 - api.mts
 - core.mjs
 - UI/UX Pro Max - Design Intelligence
-- index.ts
-- Kits.tsx
+- [...path].mjs
+- kits.ts
 - 5. Re-render Optimization
 - CatalogRefreshTest
 - 7. JavaScript Performance
 - Quick Reference
 - compilerOptions
-- detect_domain
+- .autoManage
 - blobs-store.test.ts
 - account.ts
 - Pre-Delivery Checklist (canonical — the only one)
 - Quick Reference
 - run.mjs
-- creator.ts
+- remote.ts
 - _style_is_dark_primary
 - 6. Rendering Performance
 - jogo
@@ -103,7 +103,7 @@
 - parsewiki.mjs
 - StatsViews.tsx
 - Auditoria — Brassfeet / "Mandante"
-- _normalize
+- vercel.json
 - React Best Practices
 - Sections
 - resolve.mjs
@@ -113,19 +113,16 @@
 - test_skill_script_paths.py
 - 1. Eliminating Waterfalls
 - 2. Bundle Size Optimization
-- _row_identities
 - CatalogSummaryLineEndingsTest
 - React Best Practices
 - memberships.mjs
-- Market.tsx
+- .outcome
 - TestStackFlagWithDesignSystem
 - TestMetricMath
-- TestTextLayoutDataContracts
 - 4. Client-Side Data Fetching
 - Web Interface Guidelines
 - fetchalt.mjs
 - playerqids.mjs
-- TestFixtureValidation
 - async-cheap-condition-before-await.md
 - Prefer Statically Analyzable Paths
 - server-hoist-static-io.md
@@ -197,9 +194,6 @@
 - server-serialization.md
 - _template.md
 - sw.js
-- table.ts
-- Arquitetura
-- StatLine
 
 ## God Nodes (most connected - your core abstractions)
 1. `clamp()` - 101 edges
@@ -228,59 +222,59 @@
 ## Import Cycles
 - None detected.
 
-## Communities (185 total, 80 thin omitted)
+## Communities (180 total, 80 thin omitted)
 
 ### Community 0 - "App.tsx"
-Cohesion: 0.10
-Nodes (43): react, pendingDecisions(), clubFixtures(), nextClubFixture(), jobOffers(), roundName(), EPOCH, fmtLong() (+35 more)
+Cohesion: 0.11
+Nodes (57): userFixtureToday(), pendingDecisions(), clubFixtures(), fixturesOn(), nextClubFixture(), jobOffers(), compFixtures(), roundName() (+49 more)
 
 ### Community 1 - "management.test.ts"
-Cohesion: 0.09
-Nodes (43): setObjectives(), newCareer(), NewCareerOptions, expireDecisions(), resolveDecision(), acceptJob(), seedUserStaff(), dayOf() (+35 more)
-
-### Community 2 - "Live Match Simulation"
 Cohesion: 0.06
-Nodes (28): AdvanceResult, resetIndex(), pruneOldSeasons(), migrate(), validateCareerShape(), validateWorldShape(), b64(), check() (+20 more)
+Nodes (66): expireDecisions(), resolveDecision(), defaultFinanceSettings(), injectCapital(), monthlyFinance(), performanceIndex(), takeBankLoan(), EXPENSE_CATS (+58 more)
+
+### Community 2 - "GameStore"
+Cohesion: 0.15
+Nodes (7): AdvanceResult, createLiveMatch(), SaveMeta, UniverseMeta, SeasonSummary, GameStore, tick()
 
 ### Community 3 - "Match Engine & Lineups"
-Cohesion: 0.08
-Nodes (9): _detect_page_type(), format_page_override_md(), _generate_intelligent_overrides(), persist_design_system(), safe_slug(), _write_persisted_file(), format_output(), read_rows() (+1 more)
+Cohesion: 0.06
+Nodes (14): _detect_page_type(), format_page_override_md(), _generate_intelligent_overrides(), persist_design_system(), safe_slug(), _write_persisted_file(), apply_decision_rules(), _object_without_duplicates() (+6 more)
 
-### Community 4 - "stats.ts"
-Cohesion: 0.22
-Nodes (17): addMissed(), closeSpell(), MAX_SENIOR, MIN_SENIOR, addInto(), archivePlayer(), compInfo(), emptyStats() (+9 more)
+### Community 4 - "matches.ts"
+Cohesion: 0.09
+Nodes (43): Arquitetura, Documento de continuidade, Estado atual, Pontos sensíveis, Próximos passos sugeridos, markRecovering(), addMissed(), addStats() (+35 more)
 
 ### Community 5 - "types.ts"
-Cohesion: 0.05
-Nodes (53): Day, EXPENSE_CATS, INCOME_CATS, keyCache, keysOf(), paidKey(), PostOpts, resetLedgerCache() (+45 more)
+Cohesion: 0.07
+Nodes (43): Day, CreatorPreview, StatRow, Achievement, AchievementKind, AwardCandidate, AwardResult, AwardWindow (+35 more)
 
-### Community 6 - "Editor.tsx"
-Cohesion: 0.08
-Nodes (70): NATIONS, setFinances(), universeStats(), fmtMoney(), ruleProblems(), ATTR_GROUPS, ATTRS, levelLabel() (+62 more)
+### Community 6 - "useGame"
+Cohesion: 0.15
+Nodes (40): fmtMoney(), levelLabel(), App(), Confirm(), Field(), Modal(), NumInput(), Toasts() (+32 more)
 
 ### Community 7 - "attributes.ts"
-Cohesion: 0.11
-Nodes (24): AttrKey, clampAttrs(), computeOvr(), formAdjust(), LEVEL_BASE, LEVEL_LABELS, LEVEL_STEP, Line (+16 more)
+Cohesion: 0.07
+Nodes (44): advanceDay(), advanceToNextEvent(), playAIFixtures(), recovering(), playFixture(), A, ATTR_COUNT, AttrKey (+36 more)
 
 ### Community 8 - "Player Attributes & Ratings"
-Cohesion: 0.10
-Nodes (33): _catalog_date(), _check_app_interface_contract(), _check_catalog_contract(), _check_catalog_summary(), _check_color_contract(), _check_core_data_contract(), _check_file(), _check_font_catalog() (+25 more)
+Cohesion: 0.07
+Nodes (43): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons, TestCurrentReactGuidance, TestSemanticColors, _catalog_date(), _check_app_interface_contract(), _check_catalog_contract() (+35 more)
 
 ### Community 9 - "Shared UI Components"
-Cohesion: 0.08
-Nodes (12): _button_outline_text_color(), _contrast_ratio(), _derive_dark_palette(), _filter_anti_patterns_for_mode(), format_master_md(), _palette_is_dark(), _relative_luminance(), _select_palette_for_mode() (+4 more)
+Cohesion: 0.06
+Nodes (15): _button_outline_text_color(), _contrast_ratio(), _derive_dark_palette(), DesignSystemGenerator, _filter_anti_patterns_for_mode(), format_master_md(), _palette_is_dark(), _relative_luminance() (+7 more)
 
 ### Community 10 - "Core Type Definitions"
 Cohesion: 0.07
-Nodes (62): FIRE_THRESHOLD, KO_PROGRESS, objectiveStatus(), seasonBoardReview(), continentalDates, continentalWeeks(), cupDates(), dayIsWeekend() (+54 more)
+Nodes (64): continentalDates, continentalWeeks(), cupDates(), dayIsWeekend(), daysOfWeek(), domesticMidweeks(), leagueDates(), regionOf() (+56 more)
 
 ### Community 11 - "MatchSim"
-Cohesion: 0.05
-Nodes (45): finishLiveMatch(), Slot, PlayerFilter, lastName(), MatchInput, MatchOutcome, MatchSim, PASS_W (+37 more)
+Cohesion: 0.12
+Nodes (9): lastName(), MatchOutcome, MatchSim, pick(), CardEv, GoalEv, MatchEvent, SubLog (+1 more)
 
 ### Community 12 - "Data Build Script"
-Cohesion: 0.16
-Nodes (33): moveToClub(), removeFromClub(), aiMarketWeek(), aiSquadMaintenance(), askingPrice(), BidResult, cancelNegotiation(), completeTransfer() (+25 more)
+Cohesion: 0.11
+Nodes (43): moveToClub(), removeFromClub(), aiMarketWeek(), aiSquadMaintenance(), askingPrice(), BidResult, cancelNegotiation(), completeTransfer() (+35 more)
 
 ### Community 13 - "sparql.mjs"
 Cohesion: 0.10
@@ -291,8 +285,8 @@ Cohesion: 0.05
 Nodes (38): Admin/Debug Endpoints, Configuration Files to Check, Content Security Policy, Cookie Security, CORS Misconfiguration, Dangerous Patterns, Dangerous Patterns, Dangerous Patterns (+30 more)
 
 ### Community 15 - "Player.tsx"
-Cohesion: 0.12
-Nodes (41): Don't Define Components Inside Components, awardsOfPlayer(), starsOf(), planFarewell(), setFutureRole(), toggleListed(), playerLevel(), playerLevelLabel() (+33 more)
+Cohesion: 0.10
+Nodes (55): Don't Define Components Inside Components, awardsOfPlayer(), starsOf(), availabilityNote(), validateLineup(), strengthSummary(), playerMarketStatus(), setFutureRole() (+47 more)
 
 ### Community 16 - "Awards Computation"
 Cohesion: 0.07
@@ -303,20 +297,20 @@ Cohesion: 0.06
 Nodes (35): 1. Avoid Native Serialization, 2. Sign Serialized Data, 3. Type-Restricted Deserialization, 4. Input Validation, Dangerous Functions, Dangerous Patterns, Dangerous Patterns, Dangerous Patterns (+27 more)
 
 ### Community 18 - "Lineup UI Components"
-Cohesion: 0.11
-Nodes (4): DesignSystemGenerator, _resolve_dial(), TestReasoningMatch, TestReasoningContract
+Cohesion: 0.06
+Nodes (8): _resolve_dial(), read_rows(), split_values(), style_identities(), TestGeneratedCatalogContract, TestLandingAndStackContract, TestReasoningContract, TestStyleIdentityContract
 
-### Community 19 - "test_data_contracts.py"
-Cohesion: 0.09
-Nodes (10): apply_decision_rules(), _object_without_duplicates(), parse_decision_rules(), _validate_action(), read_rows(), split_values(), style_identities(), TestGeneratedCatalogContract (+2 more)
+### Community 19 - "Editor.tsx"
+Cohesion: 0.08
+Nodes (35): react, TIEBREAK_NAMES, NATIONS, setFinances(), universeStats(), ATTR_GROUPS, ATTRS, stylesFor() (+27 more)
 
 ### Community 20 - "nations.ts"
 Cohesion: 0.06
-Nodes (34): AF_FIRST, AF_LAST, COL_LAST, DE_FIRST, DE_LAST, ECU_LAST, EE_FIRST, EE_LAST (+26 more)
+Nodes (33): AF_FIRST, AF_LAST, COL_LAST, DE_FIRST, DE_LAST, ECU_LAST, EE_FIRST, EE_LAST (+25 more)
 
-### Community 21 - "Package Dev Dependencies"
-Cohesion: 0.10
-Nodes (24): ClubSeed, DIVISIONS, DivisionSeed, META, NAME_PATTERNS, PALETTE, STADIUM_PATTERNS, COMMONS_THUMB (+16 more)
+### Community 21 - "clamp"
+Cohesion: 0.06
+Nodes (89): invalidateRatings(), clamp(), ClubSeed, DIVISIONS, DivisionSeed, META, NAME_PATTERNS, PALETTE (+81 more)
 
 ### Community 22 - "Node HTTP Server"
 Cohesion: 0.06
@@ -328,7 +322,7 @@ Nodes (32): Attack Vector, Build Pipeline Security, Common Typosquatting Pattern
 
 ### Community 24 - "Progression & Finances"
 Cohesion: 0.10
-Nodes (8): _exact_stack_identifier(), _project_row(), search_stack(), _valid_max_results(), _rows(), TestNativeDesktopStackFreshness, _rows(), TestWebStackFreshness
+Nodes (6): _exact_stack_identifier(), search_stack(), _rows(), TestNativeDesktopStackFreshness, _rows(), TestWebStackFreshness
 
 ### Community 25 - "Competition Defaults"
 Cohesion: 0.06
@@ -342,9 +336,9 @@ Nodes (30): 1. Data Classification, 2. Minimize Data Collection, 3. Encryption a
 Cohesion: 0.09
 Nodes (6): search(), _style_search_destination(), TestDiagnosticsContracts, TestSearchDomains, TestStyleTaxonomy, TestTextLayoutRetrieval
 
-### Community 28 - "clamp"
-Cohesion: 0.07
-Nodes (75): ballonDay(), galaDay(), weeklyBoard(), advanceDay(), AdvanceStatus, advanceToNextEvent(), compEventsNews(), dayLabel() (+67 more)
+### Community 28 - "advance.ts"
+Cohesion: 0.10
+Nodes (45): ballonDay(), galaDay(), AdvanceStatus, compEventsNews(), dayLabel(), endOfDay(), nextUserFixture(), seniorRequests() (+37 more)
 
 ### Community 29 - "Lineup Logic"
 Cohesion: 0.07
@@ -354,13 +348,13 @@ Nodes (29): API Key Security, API Security Reference, Authentication, Authorizat
 Cohesion: 0.07
 Nodes (29): Authentication Bypass on Error, Cleanup on Error, Dangerous Patterns, Dangerous Patterns, Differential Error Messages, Error-Based SQL Injection Indicators, Error Handling Security Reference, Exception Swallowing (+21 more)
 
-### Community 31 - "academy.ts"
-Cohesion: 0.16
-Nodes (17): avg(), clubEffects(), roleScore(), YouthPlan, acceptCandidate(), developmentStatus(), dismissCandidate(), expireCandidates() (+9 more)
+### Community 31 - "season.ts"
+Cohesion: 0.13
+Nodes (31): FIRE_THRESHOLD, KO_PROGRESS, objectiveStatus(), seasonBoardReview(), setObjectives(), weeklyBoard(), findClashes(), newCareer() (+23 more)
 
-### Community 32 - "Auth Core Server"
-Cohesion: 0.23
-Nodes (17): batchCreate(), bodyFor(), buildAttrs(), makePlayer(), randomAppearance(), randomName(), randomTraits(), rollPotential() (+9 more)
+### Community 32 - "engine.ts"
+Cohesion: 0.09
+Nodes (32): Slot, PlayerFilter, PASS_W, PlayerLine, PS, SideInput, Str, SubsInfo (+24 more)
 
 ### Community 33 - "Fetch Template Scripts"
 Cohesion: 0.07
@@ -371,12 +365,12 @@ Cohesion: 0.07
 Nodes (27): 1. Input Validation (Allowlist), 2. Block Internal Networks (Denylist), 3. Disable Redirects, 4. DNS Rebinding Protection, 5. Cloud Metadata Protection, Alternate Representations, Attack Scenarios, AWS IMDSv2 (+19 more)
 
 ### Community 35 - "core.py"
-Cohesion: 0.12
-Nodes (14): _contains_phrase(), _domain_keywords(), _file_signature(), _get_bm25(), _load_csv(), _load_csv_snapshot(), _load_product_keywords(), _load_rows_or_empty() (+6 more)
+Cohesion: 0.06
+Nodes (25): _contains_phrase(), detect_domain(), _domain_keywords(), _exact_match_diagnostic(), _exact_row_identity(), _file_signature(), _legacy_successor_guidance(), _load_csv() (+17 more)
 
 ### Community 36 - "Panel"
-Cohesion: 0.17
-Nodes (34): 4.1 Acessibilidade — prioridade ALTA (barato, alto impacto), TIEBREAK_NAMES, nationName(), POS_SHORT, careerTotals(), clickable(), ClubName(), Empty() (+26 more)
+Cohesion: 0.27
+Nodes (17): 4.1 Acessibilidade — prioridade ALTA (barato, alto impacto), nationName(), POS_SHORT, careerTotals(), clickable(), Empty(), Table(), Tabs() (+9 more)
 
 ### Community 37 - "Blob Storage Tests"
 Cohesion: 0.07
@@ -411,16 +405,16 @@ Cohesion: 0.08
 Nodes (25): 1. Detect Context, 2. Load Language Guide, 3. Load Infrastructure Guide (if applicable), 4. Research Before Flagging, 5. Verify Exploitability, 6. Report HIGH Confidence Only, Always Flag (Critical), Always Flag (High) (+17 more)
 
 ### Community 45 - "format_ascii_box"
-Cohesion: 0.10
-Nodes (11): ansi_ljust(), format_ascii_box(), add_wrapped(), wrap_text(), format_markdown(), generate_design_system(), hex_to_ansi(), _mode_support_labels() (+3 more)
+Cohesion: 0.12
+Nodes (10): ansi_ljust(), format_ascii_box(), add_wrapped(), wrap_text(), format_markdown(), generate_design_system(), hex_to_ansi(), _mode_support_labels() (+2 more)
 
 ### Community 46 - "Division Resolution Scripts"
 Cohesion: 0.11
 Nodes (17): createApp(), serveApi(), { DatabaseSync }, loadConfig(), makeLimiter(), MIME, now(), openDb() (+9 more)
 
 ### Community 47 - "awards.ts"
-Cohesion: 0.18
-Nodes (29): addAchievement(), awardName(), awardScorerStars(), bestBy(), bump(), candidateScore(), competitionAwards(), computeScorers() (+21 more)
+Cohesion: 0.19
+Nodes (25): addAchievement(), awardName(), awardScorerStars(), bestBy(), bump(), candidateScore(), competitionAwards(), computeScorers() (+17 more)
 
 ### Community 48 - "Python Security Patterns"
 Cohesion: 0.08
@@ -431,32 +425,32 @@ Cohesion: 0.08
 Nodes (24): 1. Race Conditions, 2. Workflow Bypass, 3. Numeric Manipulation, 4. Price/Discount Manipulation, 5. Inventory/Resource Exhaustion, 6. Time-Based Attacks, 7. Parameter Tampering, Business Logic Security Reference (+16 more)
 
 ### Community 50 - "Membership Scripts"
-Cohesion: 0.12
-Nodes (36): vitest, aiTactics(), buildSide(), autoLineup(), availabilityNote(), familiarity(), FORMATION_NAMES, FORMATIONS (+28 more)
+Cohesion: 0.14
+Nodes (26): vitest, buildSide(), autoLineup(), familiarity(), FORMATION_NAMES, FORMATIONS, isAvailable(), LINEUP_PRESETS (+18 more)
 
 ### Community 51 - "Alt Fetch Scripts"
-Cohesion: 0.12
-Nodes (24): AWARD_IDS, continental(), CUP(), cupTemplate(), defaultAwards(), defaultCompetitions(), defaultConfig(), defaultCountries() (+16 more)
+Cohesion: 0.13
+Nodes (22): AWARD_IDS, continental(), CUP(), cupTemplate(), defaultAwards(), defaultCompetitions(), defaultConfig(), defaultCountries() (+14 more)
 
 ### Community 52 - "Player QID Scripts"
 Cohesion: 0.14
-Nodes (4): BM25, _suggest_identities(), TestBm25CoreBehavior, TestTokenizer
+Nodes (5): BM25, _get_bm25(), _suggest_identities(), TestBm25CoreBehavior, TestTokenizer
 
 ### Community 53 - "Cross-Site Request Forgery (CSRF) Prevention Reference"
 Cohesion: 0.09
 Nodes (22): 1. GET Requests for State Changes, 1. Synchronizer Token Pattern, 2. CORS Misconfiguration, 2. Double Submit Cookie Pattern (Stateless), 3. SameSite Cookie Attribute, 3. Token in URL, 4. Custom Request Headers, Attack Scenario (+14 more)
 
-### Community 54 - "test_core_data_quality.py"
-Cohesion: 0.16
-Nodes (10): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons, TestCurrentReactGuidance, TestSemanticColors, _check_chart_contract(), _check_typography_contract(), _configured_font_names() (+2 more)
+### Community 54 - "SaveManager"
+Cohesion: 0.20
+Nodes (5): careerMeta(), compress(), decompress(), KV, SaveManager
 
 ### Community 55 - "useCareer"
-Cohesion: 0.22
-Nodes (27): fmtDay(), takeBankLoan(), sumBy(), facilitiesMonthlyCost(), fireStaff(), STAFF_ROLES, stadiumMonthlyCost(), Screen() (+19 more)
+Cohesion: 0.16
+Nodes (34): dayOf(), fmtDay(), monthName(), FINANCE_MODES, sumBy(), STAFF_ROLES, currentCollection(), setDiscount() (+26 more)
 
-### Community 56 - "editor.ts"
-Cohesion: 0.19
-Nodes (24): invalidateRatings(), ClubPatch, deleteClub(), deletePlayer(), duplicatePlayer(), duplicateUniverse(), editorCreatePlayer(), editorMovePlayer() (+16 more)
+### Community 56 - "storage.ts"
+Cohesion: 0.21
+Nodes (14): resetIndex(), Data, migrate(), MIGRATIONS, validateCareerShape(), validateWorldShape(), idbKV(), memoryKV() (+6 more)
 
 ### Community 57 - "Known Levels Data"
 Cohesion: 0.10
@@ -467,12 +461,12 @@ Cohesion: 0.10
 Nodes (20): Dangerous Characters, Injection Prevention Reference, Key Grep Patterns for Detection, Language-Specific Dangerous Functions, LDAP Injection, MongoDB Injection Patterns, NoSQL Injection, ORM Safety Considerations (+12 more)
 
 ### Community 59 - "Football Manager BR (nome provisório)"
-Cohesion: 0.10
-Nodes (19): 1. Netlify (tudo dentro da Netlify, sem servidor próprio), 2. Servidor Node próprio (Render, Railway, Fly.io, VPS, Docker), Como jogar, Como rodar, Contas e salvamentos, Dados reais: de onde vêm e o que é estimado, Editor do Universo e Criador de Craques, Estatísticas do elenco (+11 more)
+Cohesion: 0.09
+Nodes (20): 1. Netlify (tudo dentro da Netlify, sem servidor próprio), 2. Servidor Node próprio (Render, Railway, Fly.io, VPS, Docker), Como jogar, Como rodar, Contas e salvamentos, Dados reais: de onde vêm e o que é estimado, Editor do Universo e Criador de Craques, Estatísticas do elenco (+12 more)
 
 ### Community 60 - "api.mts"
-Cohesion: 0.12
-Nodes (16): cfg, config, core, env(), loadConfig(), dependencies, @netlify/blobs@^10.7.13, @netlify/functions@^4.3.0 (+8 more)
+Cohesion: 0.11
+Nodes (18): cfg, config, core, env(), loadConfig(), dependencies, @neondatabase/serverless@^0.10.4, @netlify/blobs@^10.7.13 (+10 more)
 
 ### Community 61 - "core.mjs"
 Cohesion: 0.23
@@ -482,13 +476,13 @@ Nodes (17): checkPassword(), createCore(), currentUser(), handle(), issueToken()
 Cohesion: 0.11
 Nodes (17): Before Delivering App UI, Example Workflow, If a search returns 0 results, Output Formats, Query Contract, Rule Categories by Priority, Running the search tool, Step 1: Analyze User Requirements (+9 more)
 
-### Community 63 - "index.ts"
-Cohesion: 0.24
-Nodes (16): conflict(), freeFor(), isFlexible(), placeFixture(), relocate(), addTo(), build(), cache (+8 more)
+### Community 63 - "[...path].mjs"
+Cohesion: 0.22
+Nodes (11): cfg, core, env(), getSql(), handler(), loadConfig(), parseCookies(), readRawBody() (+3 more)
 
-### Community 64 - "Kits.tsx"
-Cohesion: 0.15
-Nodes (35): currentCollection(), extraMarketing(), launchCollection(), previousDesigns(), restock(), setDiscount(), updateDesign(), BRANDS (+27 more)
+### Community 64 - "kits.ts"
+Cohesion: 0.22
+Nodes (19): hashString(), BRANDS, colorDistance(), contrastRatio(), defaultDesign(), defaultKitCollection(), fanPreference(), hexToRgb() (+11 more)
 
 ### Community 65 - "5. Re-render Optimization"
 Cohesion: 0.12
@@ -507,7 +501,7 @@ Cohesion: 0.13
 Nodes (14): compilerOptions, isolatedModules, jsx, lib, module, moduleResolution, noEmit, noImplicitAny (+6 more)
 
 ### Community 71 - "blobs-store.test.ts"
-Cohesion: 0.21
+Cohesion: 0.23
 Nodes (8): blobsStore(), OPS, retry(), sha(), withRetry(), fakeBlobs(), Mail, makeCore()
 
 ### Community 72 - "account.ts"
@@ -526,9 +520,9 @@ Nodes (12): 10. Charts & Data (LOW), 1. Accessibility (CRITICAL), 2. Touch & Int
 Cohesion: 0.27
 Nodes (11): advanceToMatch(), clickNav(), errors, game(), lastLink(), main(), ok(), results (+3 more)
 
-### Community 76 - "creator.ts"
-Cohesion: 0.11
-Nodes (30): ATTR_COUNT, attributeWarnings(), levelExact(), levelToOvr(), attrsForSpec(), CreatorPreview, CreatorSpec, defaultSpec() (+22 more)
+### Community 76 - "remote.ts"
+Cohesion: 0.32
+Nodes (4): b64(), check(), H, remoteKV()
 
 ### Community 77 - "_style_is_dark_primary"
 Cohesion: 0.21
@@ -563,16 +557,16 @@ Cohesion: 0.25
 Nodes (10): headingsOf(), nameOf(), needTpl, nm(), out, parseParams(), report, res (+2 more)
 
 ### Community 85 - "StatsViews.tsx"
-Cohesion: 0.23
-Nodes (18): avgRating(), conversion(), passPct(), per90(), savePct(), aggregate(), ColSet, CompareModal() (+10 more)
+Cohesion: 0.21
+Nodes (19): avgRating(), conversion(), passPct(), per90(), savePct(), Col, ColSet, CompareModal() (+11 more)
 
 ### Community 86 - "Auditoria — Brassfeet / "Mandante""
 Cohesion: 0.20
 Nodes (9): 1. Resumo executivo, 2. Funções que faltam programar, 3. Pendências na tela do usuário, 4.2 Performance de interface — prioridade MÉDIA, 4.3 Visual / produto — prioridade BAIXA (polish), 4. Melhorias de experiência do jogador, 5. Segurança (passagem leve), 6. Plano sugerido (ordem de valor) (+1 more)
 
-### Community 87 - "_normalize"
-Cohesion: 0.22
-Nodes (5): _exact_match_diagnostic(), _legacy_successor_guidance(), _normalize(), _stack_query_requests_legacy(), _stack_row_filter()
+### Community 87 - "vercel.json"
+Cohesion: 0.25
+Nodes (7): maxDuration, buildCommand, framework, functions, api/[...path].mjs, outputDirectory, $schema
 
 ### Community 88 - "React Best Practices"
 Cohesion: 0.20
@@ -606,10 +600,6 @@ Nodes (7): 1.1 Check Cheap Conditions Before Async Flags, 1.2 Defer Await Until 
 Cohesion: 0.29
 Nodes (7): 2.1 Avoid Barrel File Imports, 2.2 Conditional Module Loading, 2.3 Defer Non-Critical Third-Party Libraries, 2.4 Dynamic Imports for Heavy Components, 2.5 Prefer Statically Analyzable Paths, 2.6 Preload Based on User Intent, 2. Bundle Size Optimization
 
-### Community 97 - "_row_identities"
-Cohesion: 0.33
-Nodes (3): _exact_row_identity(), _row_identities(), _style_identity()
-
 ### Community 99 - "React Best Practices"
 Cohesion: 0.33
 Nodes (5): Creating a New Rule, Getting Started, React Best Practices, Rule File Structure, Structure
@@ -617,10 +607,6 @@ Nodes (5): Creating a New Rule, Getting Started, React Best Practices, Rule File
 ### Community 100 - "memberships.mjs"
 Cohesion: 0.33
 Nodes (5): clubIds, ids, raw, t2, todo
-
-### Community 101 - "Market.tsx"
-Cohesion: 0.40
-Nodes (8): compFixtures(), playerMarketStatus(), StadiumView(), potRange(), ClubView(), Market(), Negotiation(), Tab
 
 ### Community 105 - "4. Client-Side Data Fetching"
 Cohesion: 0.40
@@ -638,35 +624,23 @@ Nodes (3): arts, res, ws
 Cohesion: 0.50
 Nodes (3): File-System Paths, Import Paths, Prefer Statically Analyzable Paths
 
-### Community 182 - "table.ts"
-Cohesion: 0.36
-Nodes (8): accumulate(), critValue(), emptyRow(), Points, sortGroup(), standings(), StandingRow, Tiebreak
-
-### Community 183 - "Arquitetura"
-Cohesion: 0.33
-Nodes (6): Arquitetura, Documento de continuidade, Estado atual, Pontos sensíveis, Próximos passos sugeridos, archiveSeason()
-
-### Community 184 - "StatLine"
-Cohesion: 0.67
-Nodes (4): StatRow, CompKind, StatLine, Agg
-
 ## Knowledge Gaps
 - **80 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `5. Re-render Optimization` connect `5. Re-render Optimization` to `React Best Practices`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+- **Why does `React Best Practices` connect `React Best Practices` to `2. Bundle Size Optimization`, `5. Re-render Optimization`, `7. JavaScript Performance`, `4. Client-Side Data Fetching`, `6. Rendering Performance`, `3. Server-Side Performance`, `1. Eliminating Waterfalls`?**
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **Should `App.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.10412299091544375 - nodes in this community are weakly interconnected._
-- **Why does `Avatar()` connect `Player.tsx` to `5. Re-render Optimization`, `Editor.tsx`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+  _Cohesion score 0.10675990675990676 - nodes in this community are weakly interconnected._
+- **Why does `Avatar()` connect `Player.tsx` to `5. Re-render Optimization`, `Editor.tsx`, `useGame`?**
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Should `management.test.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.09025974025974026 - nodes in this community are weakly interconnected._
-- **Why does `5.4 Don't Define Components Inside Components` connect `5. Re-render Optimization` to `Player.tsx`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
-- **Should `Live Match Simulation` be split into smaller, more focused modules?**
-  _Cohesion score 0.058747160012982795 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06426906426906427 - nodes in this community are weakly interconnected._
+- **Why does `5. Re-render Optimization` connect `5. Re-render Optimization` to `React Best Practices`?**
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
+- **Should `GameStore` be split into smaller, more focused modules?**
+  _Cohesion score 0.14838709677419354 - nodes in this community are weakly interconnected._
 - **Should `Match Engine & Lineups` be split into smaller, more focused modules?**
-  _Cohesion score 0.07541478129713423 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05834464043419267 - nodes in this community are weakly interconnected._

@@ -72,3 +72,22 @@ Hospedagens só de arquivos estáticos (sem servidor) também rodam o jogo, mas 
 progresso fica salvo no navegador de cada jogador.
 
 Faça backup periódico de `DATA_DIR/fmbr.sqlite` (por exemplo, `sqlite3 fmbr.sqlite ".backup copia.sqlite"`).
+
+## Vercel (com Postgres)
+
+Alternativa à Netlify que roda tudo na Vercel, guardando contas e salvamentos num **Postgres**
+(em vez de object storage). Peças:
+
+- `api/[...path].mjs`: função serverless que atende `/api/*` com o mesmo `core.mjs`.
+- `server/postgres-store.mjs`: store do núcleo sobre Postgres (`@neondatabase/serverless`).
+- `vercel.json`: build do Vite em `dist/` + a função de API.
+
+Passos:
+1. Importe o repositório na Vercel (framework detectado: Vite).
+2. Em **Storage → Create Database → Neon (Postgres)** e conecte ao projeto — isso injeta a
+   variável `DATABASE_URL` automaticamente (o store também aceita `POSTGRES_URL`).
+3. Faça o deploy. As tabelas são criadas sozinhas no primeiro acesso.
+
+Variáveis opcionais (iguais às da Netlify): `SMTP_HOST`/`SMTP_USER`/`SMTP_PASS`/`MAIL_FROM`,
+`REQUIRE_EMAIL_VERIFICATION`, `QUOTA_MB`, `MAX_SAVE_MB`, `SESSION_DAYS`, `APP_NAME`, `BASE_URL`
+(o endereço público; na ausência, usa `VERCEL_URL`).
