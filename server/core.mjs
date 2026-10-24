@@ -214,24 +214,33 @@ export function createCore({ cfg, store, mailer, mailConfigured = () => false })
         } catch {
           return fail(400, 'Metadados inválidos.');
         }
-        const prev = await store.kvGet(user.id, kvStore, id);
-        const used = (await store.kvUsage(user.id)) - (prev?.size ?? 0) + payload.length;
-        if (used > quotaBytes) return fail(413, `Espaço da conta esgotado (${cfg.quotaMb} MB). Exclua salvamentos antigos.`);
-        // cópia de segurança automática da versão anterior de cada carreira (todas as partes)
+        // cota: melhor esforço — se a leitura do Blobs falhar, não bloqueia o salvamento
+        let prev;
+        try {
+          prev = await store.kvGet(user.id, kvStore, id);
+          const used = (await store.kvUsage(user.id)) - (prev?.size ?? 0) + payload.length;
+          if (used > quotaBytes) return fail(413, `Espaço da conta esgotado (${cfg.quotaMb} MB). Exclua salvamentos antigos.`);
+        } catch { /* ignora: a checagem de cota não derruba o salvamento */ }
+        // cópia de segurança da versão anterior (todas as partes): melhor esforço, nunca derruba o save
         if (kvStore === 'careers' && !id.includes('.part')) {
-          for (const o of (await store.kvList(user.id, 'careers')).filter((r) => r.id === id || r.id.startsWith(`${id}.part`))) {
-            const rec = await store.kvGet(user.id, 'careers', o.id);
-            if (rec) await store.kvPut(user.id, 'backups', o.id, rec.meta, rec.payload, rec.compressed, rec.size, now());
-          }
+          try {
+            for (const o of (await store.kvList(user.id, 'careers')).filter((r) => r.id === id || r.id.startsWith(`${id}.part`))) {
+              const rec = await store.kvGet(user.id, 'careers', o.id);
+              if (rec) await store.kvPut(user.id, 'backups', o.id, rec.meta, rec.payload, rec.compressed, rec.size, now());
+            }
+          } catch { /* a cópia de segurança é opcional */ }
         }
+        // o salvamento em si — única operação obrigatória (o store já repete em caso de blip)
         await store.kvPut(user.id, kvStore, id, JSON.stringify(meta), payload, req.headers['x-compressed'] === '1' ? 1 : 0, payload.length, now());
         return json(200, { ok: true });
       }
       if (id && method === 'DELETE') {
         await store.kvDel(user.id, kvStore, id);
-        // ao apagar a base de uma carreira, remove também as partes da cópia de segurança
+        // ao apagar a base de uma carreira, remove também as partes da cópia de segurança (melhor esforço)
         if (kvStore === 'careers' && !id.includes('.part')) {
-          for (const o of (await store.kvList(user.id, 'backups')).filter((r) => r.id === id || r.id.startsWith(`${id}.part`))) await store.kvDel(user.id, 'backups', o.id);
+          try {
+            for (const o of (await store.kvList(user.id, 'backups')).filter((r) => r.id === id || r.id.startsWith(`${id}.part`))) await store.kvDel(user.id, 'backups', o.id);
+          } catch { /* a limpeza de backup não derruba a exclusão */ }
         }
         return json(200, { ok: true });
       }
