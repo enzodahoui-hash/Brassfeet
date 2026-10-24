@@ -42,6 +42,13 @@ export function PlayerPage({ id }: { id: string }) {
   const groups = p.pos === 'GK' ? ['gol', 'men', 'fis', 'tec'] : ['tec', 'fis', 'men'];
   const shortlisted = c.shortlist.includes(p.id);
   const youthHere = p.squad === 'youth' && p.clubId === c.userClubId;
+  // ações secundárias do jogador do próprio clube: inline no desktop, agrupadas em "Mais" só no celular
+  const secondary: MenuItem[] = own && p.clubId === c.userClubId ? [
+    ...(p.contract ? [{ label: 'Renovar contrato', onClick: () => setModal('renew') }] : []),
+    { label: p.listed ? 'Tirar da lista de venda' : 'Colocar à venda', onClick: () => store.act((cc) => toggleListed(cc, p.id)) },
+    { label: 'Emprestar', onClick: () => setModal('loan') },
+    { label: 'Liberar', onClick: () => setModal('release'), danger: true },
+  ] : [];
 
   return (
     <div className="page">
@@ -51,12 +58,10 @@ export function PlayerPage({ id }: { id: string }) {
           <>
             {youthHere && <button className="btn go" onClick={() => store.act((cc) => promote(cc, p, 'rotation'), 'Jogador promovido ao profissional.')}><Icon name="youth" />Promover</button>}
             <button className="btn" onClick={() => setModal('compare')}>Comparar</button>
-            <Menu label="Mais" items={[
-              ...(p.contract && p.clubId === c.userClubId ? [{ label: 'Renovar contrato', onClick: () => setModal('renew') }] : []),
-              ...(p.clubId === c.userClubId ? [{ label: p.listed ? 'Tirar da lista de venda' : 'Colocar à venda', onClick: () => store.act((cc) => toggleListed(cc, p.id)) }] : []),
-              ...(p.clubId === c.userClubId ? [{ label: 'Emprestar', onClick: () => setModal('loan') }] : []),
-              ...(p.clubId === c.userClubId ? [{ label: 'Liberar', onClick: () => setModal('release'), danger: true }] : []),
-            ] satisfies MenuItem[]} />
+            {secondary.length > 0 && <>
+              <span className="row tight hide-mobile">{secondary.map((a, i) => <button key={i} className={`btn ${a.danger ? 'danger' : ''}`} onClick={a.onClick}>{a.label}</button>)}</span>
+              <span className="only-m"><Menu label="Mais" items={secondary} /></span>
+            </>}
           </>
         ) : (
           <>

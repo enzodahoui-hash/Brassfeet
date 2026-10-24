@@ -1,27 +1,29 @@
 # Graph Report - Brassfeet  (2026-10-24)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 284 files · ~388,487 words
+- Verdict: corpus is large enough that graph structure adds value.
+- Unclassified: 44 file(s) not represented in the graph (top: .csv 37, (none) 4, .toml 1)
 
 ## Summary
-- 2901 nodes · 7869 edges · 183 communities (100 shown, 83 thin omitted)
+- 2911 nodes · 7910 edges · 185 communities (105 shown, 80 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 187 edges (avg confidence: 0.87)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `72d450a2`
+- Built from commit: `65523cf0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- Career Setup & Calendar
-- Save Migration & Validation
+- App.tsx
+- management.test.ts
 - Live Match Simulation
 - Match Engine & Lineups
-- UI Constants & Finances
-- Transfers & Decisions
-- Random Utils & Real Data
-- Player Stats & Rosters
+- stats.ts
+- types.ts
+- Editor.tsx
+- attributes.ts
 - Player Attributes & Ratings
 - Shared UI Components
 - Core Type Definitions
@@ -29,7 +31,7 @@
 - Data Build Script
 - sparql.mjs
 - Security Misconfiguration Reference
-- Nation Name Pools
+- Player.tsx
 - Awards Computation
 - Wiki Article Scripts
 - Lineup UI Components
@@ -42,15 +44,15 @@
 - Competition Defaults
 - Board & Season Setup
 - Universe Editor
-- Fixture Date Planning
+- clamp
 - Lineup Logic
 - Netlify API Config
-- Fixture Conflict Resolution
+- academy.ts
 - Auth Core Server
 - Fetch Template Scripts
 - Server-Side Request Forgery (SSRF) Prevention Reference
 - core.py
-- TypeScript Config
+- Panel
 - Blob Storage Tests
 - Account Client API
 - E2E Test Runner
@@ -69,8 +71,8 @@
 - Player QID Scripts
 - Cross-Site Request Forgery (CSRF) Prevention Reference
 - test_core_data_quality.py
-- progression.ts
-- subs-stats.test.ts
+- useCareer
+- editor.ts
 - Known Levels Data
 - Service Worker
 - Football Manager BR (nome provisório)
@@ -78,7 +80,7 @@
 - core.mjs
 - UI/UX Pro Max - Design Intelligence
 - index.ts
-- kits.ts
+- Kits.tsx
 - 5. Re-render Optimization
 - CatalogRefreshTest
 - 7. JavaScript Performance
@@ -90,7 +92,7 @@
 - Pre-Delivery Checklist (canonical — the only one)
 - Quick Reference
 - run.mjs
-- value.ts
+- creator.ts
 - _style_is_dark_primary
 - 6. Rendering Performance
 - jogo
@@ -99,7 +101,7 @@
 - 3. Server-Side Performance
 - scripts
 - parsewiki.mjs
-- .autoManage
+- StatsViews.tsx
 - Auditoria — Brassfeet / "Mandante"
 - _normalize
 - React Best Practices
@@ -115,7 +117,7 @@
 - CatalogSummaryLineEndingsTest
 - React Best Practices
 - memberships.mjs
-- .outcome
+- Market.tsx
 - TestStackFlagWithDesignSystem
 - TestMetricMath
 - TestTextLayoutDataContracts
@@ -195,7 +197,9 @@
 - server-serialization.md
 - _template.md
 - sw.js
-- Tactics
+- table.ts
+- Arquitetura
+- StatLine
 
 ## God Nodes (most connected - your core abstractions)
 1. `clamp()` - 101 edges
@@ -207,56 +211,56 @@
 7. `Rng` - 53 edges
 8. `Table()` - 53 edges
 9. `addNews()` - 52 edges
-10. `Icon()` - 51 edges
+10. `Icon()` - 52 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `3.3 Avoid Shared Module State for Request Data` --references--> `currentUser()`  [INFERRED]
+  .claude/skills/vercel-react-best-practices/AGENTS.md → server/core.mjs
+- `Avoid Shared Module State for Request Data` --references--> `currentUser()`  [INFERRED]
+  .claude/skills/vercel-react-best-practices/rules/server-no-shared-module-state.md → server/core.mjs
 - `3. Pendências na tela do usuário` --references--> `pendingDecisions()`  [INFERRED]
   AUDITORIA.md → src/engine/career/decisions.ts
 - `5.4 Don't Define Components Inside Components` --references--> `Avatar()`  [INFERRED]
   .claude/skills/vercel-react-best-practices/AGENTS.md → src/ui/components/graphics.tsx
 - `4.2 Performance de interface — prioridade MÉDIA` --references--> `useGame()`  [INFERRED]
   AUDITORIA.md → src/ui/store.ts
-- `3.3 Avoid Shared Module State for Request Data` --references--> `currentUser()`  [INFERRED]
-  .claude/skills/vercel-react-best-practices/AGENTS.md → server/core.mjs
-- `Avoid Shared Module State for Request Data` --references--> `currentUser()`  [INFERRED]
-  .claude/skills/vercel-react-best-practices/rules/server-no-shared-module-state.md → server/core.mjs
 
 ## Import Cycles
 - None detected.
 
-## Communities (183 total, 83 thin omitted)
+## Communities (185 total, 80 thin omitted)
 
-### Community 0 - "Career Setup & Calendar"
-Cohesion: 0.05
-Nodes (199): 4.1 Acessibilidade — prioridade ALTA (barato, alto impacto), Don't Define Components Inside Components, react, awardsOfPlayer(), starsOf(), userFixtureToday(), pendingDecisions(), clubFixtures() (+191 more)
+### Community 0 - "App.tsx"
+Cohesion: 0.10
+Nodes (43): react, pendingDecisions(), clubFixtures(), nextClubFixture(), jobOffers(), roundName(), EPOCH, fmtLong() (+35 more)
 
-### Community 1 - "Save Migration & Validation"
-Cohesion: 0.05
-Nodes (80): expireDecisions(), resolveDecision(), applyDiscipline(), applyInjuries(), applyOutcome(), clubAfterMatch(), createLiveMatch(), matchInput() (+72 more)
+### Community 1 - "management.test.ts"
+Cohesion: 0.09
+Nodes (43): setObjectives(), newCareer(), NewCareerOptions, expireDecisions(), resolveDecision(), acceptJob(), seedUserStaff(), dayOf() (+35 more)
 
 ### Community 2 - "Live Match Simulation"
 Cohesion: 0.06
-Nodes (27): AdvanceResult, Data, migrate(), MIGRATIONS, validateCareerShape(), validateWorldShape(), b64(), check() (+19 more)
+Nodes (28): AdvanceResult, resetIndex(), pruneOldSeasons(), migrate(), validateCareerShape(), validateWorldShape(), b64(), check() (+20 more)
 
 ### Community 3 - "Match Engine & Lineups"
 Cohesion: 0.08
 Nodes (9): _detect_page_type(), format_page_override_md(), _generate_intelligent_overrides(), persist_design_system(), safe_slug(), _write_persisted_file(), format_output(), read_rows() (+1 more)
 
-### Community 4 - "UI Constants & Finances"
-Cohesion: 0.09
-Nodes (47): Arquitetura, Documento de continuidade, Estado atual, Pontos sensíveis, Próximos passos sugeridos, addMissed(), addStats(), closeSpell() (+39 more)
+### Community 4 - "stats.ts"
+Cohesion: 0.22
+Nodes (17): addMissed(), closeSpell(), MAX_SENIOR, MIN_SENIOR, addInto(), archivePlayer(), compInfo(), emptyStats() (+9 more)
 
-### Community 5 - "Transfers & Decisions"
-Cohesion: 0.07
-Nodes (45): findClashes(), tieState, accumulate(), critValue(), emptyRow(), Points, sortGroup(), standings() (+37 more)
+### Community 5 - "types.ts"
+Cohesion: 0.05
+Nodes (53): Day, EXPENSE_CATS, INCOME_CATS, keyCache, keysOf(), paidKey(), PostOpts, resetLedgerCache() (+45 more)
 
-### Community 6 - "Random Utils & Real Data"
-Cohesion: 0.10
-Nodes (46): TIEBREAK_NAMES, ClubPatch, deleteClub(), deletePlayer(), duplicatePlayer(), duplicateUniverse(), exportUniverseText(), generateYouth() (+38 more)
+### Community 6 - "Editor.tsx"
+Cohesion: 0.08
+Nodes (70): NATIONS, setFinances(), universeStats(), fmtMoney(), ruleProblems(), ATTR_GROUPS, ATTRS, levelLabel() (+62 more)
 
-### Community 7 - "Player Stats & Rosters"
-Cohesion: 0.09
-Nodes (43): invalidateRatings(), updatePlayer(), ATTR_GROUPS, attributeWarnings(), AttrKey, clampAttrs(), computeOvr(), formAdjust() (+35 more)
+### Community 7 - "attributes.ts"
+Cohesion: 0.11
+Nodes (24): AttrKey, clampAttrs(), computeOvr(), formAdjust(), LEVEL_BASE, LEVEL_LABELS, LEVEL_STEP, Line (+16 more)
 
 ### Community 8 - "Player Attributes & Ratings"
 Cohesion: 0.10
@@ -267,16 +271,16 @@ Cohesion: 0.08
 Nodes (12): _button_outline_text_color(), _contrast_ratio(), _derive_dark_palette(), _filter_anti_patterns_for_mode(), format_master_md(), _palette_is_dark(), _relative_luminance(), _select_palette_for_mode() (+4 more)
 
 ### Community 10 - "Core Type Definitions"
-Cohesion: 0.13
-Nodes (39): continentalDates, continentalWeeks(), cupDates(), dayIsWeekend(), daysOfWeek(), domesticMidweeks(), leagueDates(), regionOf() (+31 more)
+Cohesion: 0.07
+Nodes (62): FIRE_THRESHOLD, KO_PROGRESS, objectiveStatus(), seasonBoardReview(), continentalDates, continentalWeeks(), cupDates(), dayIsWeekend() (+54 more)
 
 ### Community 11 - "MatchSim"
-Cohesion: 0.14
-Nodes (4): lastName(), MatchSim, pick(), LiveState
+Cohesion: 0.05
+Nodes (45): finishLiveMatch(), Slot, PlayerFilter, lastName(), MatchInput, MatchOutcome, MatchSim, PASS_W (+37 more)
 
 ### Community 12 - "Data Build Script"
-Cohesion: 0.15
-Nodes (38): moveToClub(), removeFromClub(), aiMarketWeek(), aiSquadMaintenance(), askingPrice(), BidResult, cancelNegotiation(), completeTransfer() (+30 more)
+Cohesion: 0.16
+Nodes (33): moveToClub(), removeFromClub(), aiMarketWeek(), aiSquadMaintenance(), askingPrice(), BidResult, cancelNegotiation(), completeTransfer() (+25 more)
 
 ### Community 13 - "sparql.mjs"
 Cohesion: 0.10
@@ -286,9 +290,9 @@ Nodes (26): ids, out, r, ids, out, r, L, out (+18 more)
 Cohesion: 0.05
 Nodes (38): Admin/Debug Endpoints, Configuration Files to Check, Content Security Policy, Cookie Security, CORS Misconfiguration, Dangerous Patterns, Dangerous Patterns, Dangerous Patterns (+30 more)
 
-### Community 15 - "Nation Name Pools"
-Cohesion: 0.14
-Nodes (33): FIRE_THRESHOLD, KO_PROGRESS, objectiveStatus(), seasonBoardReview(), setObjectives(), weeklyBoard(), newCareer(), NewCareerOptions (+25 more)
+### Community 15 - "Player.tsx"
+Cohesion: 0.12
+Nodes (41): Don't Define Components Inside Components, awardsOfPlayer(), starsOf(), planFarewell(), setFutureRole(), toggleListed(), playerLevel(), playerLevelLabel() (+33 more)
 
 ### Community 16 - "Awards Computation"
 Cohesion: 0.07
@@ -311,8 +315,8 @@ Cohesion: 0.06
 Nodes (34): AF_FIRST, AF_LAST, COL_LAST, DE_FIRST, DE_LAST, ECU_LAST, EE_FIRST, EE_LAST (+26 more)
 
 ### Community 21 - "Package Dev Dependencies"
-Cohesion: 0.09
-Nodes (26): ClubSeed, DIVISIONS, DivisionSeed, META, NAME_PATTERNS, PALETTE, STADIUM_PATTERNS, COMMONS_THUMB (+18 more)
+Cohesion: 0.10
+Nodes (24): ClubSeed, DIVISIONS, DivisionSeed, META, NAME_PATTERNS, PALETTE, STADIUM_PATTERNS, COMMONS_THUMB (+16 more)
 
 ### Community 22 - "Node HTTP Server"
 Cohesion: 0.06
@@ -338,9 +342,9 @@ Nodes (30): 1. Data Classification, 2. Minimize Data Collection, 3. Encryption a
 Cohesion: 0.09
 Nodes (6): search(), _style_search_destination(), TestDiagnosticsContracts, TestSearchDomains, TestStyleTaxonomy, TestTextLayoutRetrieval
 
-### Community 28 - "Fixture Date Planning"
-Cohesion: 0.13
-Nodes (27): ballonDay(), galaDay(), advanceDay(), AdvanceStatus, advanceToNextEvent(), compEventsNews(), dayLabel(), endOfDay() (+19 more)
+### Community 28 - "clamp"
+Cohesion: 0.07
+Nodes (75): ballonDay(), galaDay(), weeklyBoard(), advanceDay(), AdvanceStatus, advanceToNextEvent(), compEventsNews(), dayLabel() (+67 more)
 
 ### Community 29 - "Lineup Logic"
 Cohesion: 0.07
@@ -350,13 +354,13 @@ Nodes (29): API Key Security, API Security Reference, Authentication, Authorizat
 Cohesion: 0.07
 Nodes (29): Authentication Bypass on Error, Cleanup on Error, Dangerous Patterns, Dangerous Patterns, Differential Error Messages, Error-Based SQL Injection Indicators, Error Handling Security Reference, Exception Swallowing (+21 more)
 
-### Community 31 - "Fixture Conflict Resolution"
-Cohesion: 0.12
-Nodes (24): seniorRequests(), Rng, addDecision(), NewsIcon, ovrToLevel(), WeekContext, processRetirements(), retirementChance() (+16 more)
+### Community 31 - "academy.ts"
+Cohesion: 0.16
+Nodes (17): avg(), clubEffects(), roleScore(), YouthPlan, acceptCandidate(), developmentStatus(), dismissCandidate(), expireCandidates() (+9 more)
 
 ### Community 32 - "Auth Core Server"
-Cohesion: 0.20
-Nodes (23): batchCreate(), editorCreatePlayer(), editorMovePlayer(), redistributePlayers(), bodyFor(), buildAttrs(), makePlayer(), randomAlt() (+15 more)
+Cohesion: 0.23
+Nodes (17): batchCreate(), bodyFor(), buildAttrs(), makePlayer(), randomAppearance(), randomName(), randomTraits(), rollPotential() (+9 more)
 
 ### Community 33 - "Fetch Template Scripts"
 Cohesion: 0.07
@@ -370,9 +374,9 @@ Nodes (27): 1. Input Validation (Allowlist), 2. Block Internal Networks (Denylis
 Cohesion: 0.12
 Nodes (14): _contains_phrase(), _domain_keywords(), _file_signature(), _get_bm25(), _load_csv(), _load_csv_snapshot(), _load_product_keywords(), _load_rows_or_empty() (+6 more)
 
-### Community 36 - "TypeScript Config"
-Cohesion: 0.10
-Nodes (23): Slot, MatchOutcome, PASS_W, PlayerLine, PS, Str, SubsInfo, SubSuggestion (+15 more)
+### Community 36 - "Panel"
+Cohesion: 0.17
+Nodes (34): 4.1 Acessibilidade — prioridade ALTA (barato, alto impacto), TIEBREAK_NAMES, nationName(), POS_SHORT, careerTotals(), clickable(), ClubName(), Empty() (+26 more)
 
 ### Community 37 - "Blob Storage Tests"
 Cohesion: 0.07
@@ -388,7 +392,7 @@ Nodes (26): Angular, Content Security Policy (CSP), Cross-Site Scripting (XSS) P
 
 ### Community 40 - "package.json"
 Cohesion: 0.10
-Nodes (25): devDependencies, fake-indexeddb@^6.0.0, playwright-core@^1.56.1, @types/node@^22.10.2, @types/react@^18.3.12, @types/react-dom@^18.3.1, typescript@^5.6.3, vite@^5.4.11 (+17 more)
+Nodes (24): devDependencies, fake-indexeddb@^6.0.0, playwright-core@^1.56.1, @types/node@^22.10.2, @types/react@^18.3.12, @types/react-dom@^18.3.1, typescript@^5.6.3, vite@^5.4.11 (+16 more)
 
 ### Community 41 - "Docker Compose Config"
 Cohesion: 0.08
@@ -412,11 +416,11 @@ Nodes (11): ansi_ljust(), format_ascii_box(), add_wrapped(), wrap_text(), format
 
 ### Community 46 - "Division Resolution Scripts"
 Cohesion: 0.11
-Nodes (16): createApp(), serveApi(), { DatabaseSync }, loadConfig(), makeLimiter(), MIME, now(), openDb() (+8 more)
+Nodes (17): createApp(), serveApi(), { DatabaseSync }, loadConfig(), makeLimiter(), MIME, now(), openDb() (+9 more)
 
 ### Community 47 - "awards.ts"
 Cohesion: 0.18
-Nodes (25): addAchievement(), awardName(), awardScorerStars(), bestBy(), bump(), candidateScore(), competitionAwards(), computeScorers() (+17 more)
+Nodes (29): addAchievement(), awardName(), awardScorerStars(), bestBy(), bump(), candidateScore(), competitionAwards(), computeScorers() (+21 more)
 
 ### Community 48 - "Python Security Patterns"
 Cohesion: 0.08
@@ -427,12 +431,12 @@ Cohesion: 0.08
 Nodes (24): 1. Race Conditions, 2. Workflow Bypass, 3. Numeric Manipulation, 4. Price/Discount Manipulation, 5. Inventory/Resource Exhaustion, 6. Time-Based Attacks, 7. Parameter Tampering, Business Logic Security Reference (+16 more)
 
 ### Community 50 - "Membership Scripts"
-Cohesion: 0.16
-Nodes (21): aiTactics(), buildSide(), autoLineup(), familiarity(), FORMATION_NAMES, FORMATIONS, isAvailable(), LineupIssue (+13 more)
+Cohesion: 0.12
+Nodes (36): vitest, aiTactics(), buildSide(), autoLineup(), availabilityNote(), familiarity(), FORMATION_NAMES, FORMATIONS (+28 more)
 
 ### Community 51 - "Alt Fetch Scripts"
 Cohesion: 0.12
-Nodes (23): AWARD_IDS, continental(), CUP(), cupTemplate(), defaultAwards(), defaultCompetitions(), defaultConfig(), defaultCountries() (+15 more)
+Nodes (24): AWARD_IDS, continental(), CUP(), cupTemplate(), defaultAwards(), defaultCompetitions(), defaultConfig(), defaultCountries() (+16 more)
 
 ### Community 52 - "Player QID Scripts"
 Cohesion: 0.14
@@ -446,13 +450,13 @@ Nodes (22): 1. GET Requests for State Changes, 1. Synchronizer Token Pattern, 2.
 Cohesion: 0.16
 Nodes (10): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons, TestCurrentReactGuidance, TestSemanticColors, _check_chart_contract(), _check_typography_contract(), _configured_font_names() (+2 more)
 
-### Community 55 - "progression.ts"
-Cohesion: 0.12
-Nodes (21): markRecovering(), recovering(), ATTR_COUNT, ATTRS, ageGrowth(), ageOf(), decline(), distribute() (+13 more)
+### Community 55 - "useCareer"
+Cohesion: 0.22
+Nodes (27): fmtDay(), takeBankLoan(), sumBy(), facilitiesMonthlyCost(), fireStaff(), STAFF_ROLES, stadiumMonthlyCost(), Screen() (+19 more)
 
-### Community 56 - "subs-stats.test.ts"
-Cohesion: 0.18
-Nodes (19): SideInput, DEFAULT_REG, defaultSubPlan(), newRule(), ROLE_DEMAND, ROLE_NAME, ruleProblems(), SUB_MODES (+11 more)
+### Community 56 - "editor.ts"
+Cohesion: 0.19
+Nodes (24): invalidateRatings(), ClubPatch, deleteClub(), deletePlayer(), duplicatePlayer(), duplicateUniverse(), editorCreatePlayer(), editorMovePlayer() (+16 more)
 
 ### Community 57 - "Known Levels Data"
 Cohesion: 0.10
@@ -467,8 +471,8 @@ Cohesion: 0.10
 Nodes (19): 1. Netlify (tudo dentro da Netlify, sem servidor próprio), 2. Servidor Node próprio (Render, Railway, Fly.io, VPS, Docker), Como jogar, Como rodar, Contas e salvamentos, Dados reais: de onde vêm e o que é estimado, Editor do Universo e Criador de Craques, Estatísticas do elenco (+11 more)
 
 ### Community 60 - "api.mts"
-Cohesion: 0.13
-Nodes (17): cfg, config, core, env(), loadConfig(), dependencies, @netlify/blobs@^10.7.13, @netlify/functions@^4.3.0 (+9 more)
+Cohesion: 0.12
+Nodes (16): cfg, config, core, env(), loadConfig(), dependencies, @netlify/blobs@^10.7.13, @netlify/functions@^4.3.0 (+8 more)
 
 ### Community 61 - "core.mjs"
 Cohesion: 0.23
@@ -482,9 +486,9 @@ Nodes (17): Before Delivering App UI, Example Workflow, If a search returns 0 re
 Cohesion: 0.24
 Nodes (16): conflict(), freeFor(), isFlexible(), placeFixture(), relocate(), addTo(), build(), cache (+8 more)
 
-### Community 64 - "kits.ts"
-Cohesion: 0.24
-Nodes (17): BRANDS, colorDistance(), contrastRatio(), defaultDesign(), defaultKitCollection(), fanPreference(), hexToRgb(), isNeutral() (+9 more)
+### Community 64 - "Kits.tsx"
+Cohesion: 0.15
+Nodes (35): currentCollection(), extraMarketing(), launchCollection(), previousDesigns(), restock(), setDiscount(), updateDesign(), BRANDS (+27 more)
 
 ### Community 65 - "5. Re-render Optimization"
 Cohesion: 0.12
@@ -522,9 +526,9 @@ Nodes (12): 10. Charts & Data (LOW), 1. Accessibility (CRITICAL), 2. Touch & Int
 Cohesion: 0.27
 Nodes (11): advanceToMatch(), clickNav(), errors, game(), lastLink(), main(), ok(), results (+3 more)
 
-### Community 76 - "value.ts"
-Cohesion: 0.21
-Nodes (11): levelExact(), cache, TRAIT_MAP, TraitDef, TRAITS, ZERO, ageValueFactor(), baseValueForLevel() (+3 more)
+### Community 76 - "creator.ts"
+Cohesion: 0.11
+Nodes (30): ATTR_COUNT, attributeWarnings(), levelExact(), levelToOvr(), attrsForSpec(), CreatorPreview, CreatorSpec, defaultSpec() (+22 more)
 
 ### Community 77 - "_style_is_dark_primary"
 Cohesion: 0.21
@@ -557,6 +561,10 @@ Nodes (11): scripts, build, build:single, dev, e2e, preview, serve, start (+3 mo
 ### Community 84 - "parsewiki.mjs"
 Cohesion: 0.25
 Nodes (10): headingsOf(), nameOf(), needTpl, nm(), out, parseParams(), report, res (+2 more)
+
+### Community 85 - "StatsViews.tsx"
+Cohesion: 0.23
+Nodes (18): avgRating(), conversion(), passPct(), per90(), savePct(), aggregate(), ColSet, CompareModal() (+10 more)
 
 ### Community 86 - "Auditoria — Brassfeet / "Mandante""
 Cohesion: 0.20
@@ -610,6 +618,10 @@ Nodes (5): Creating a New Rule, Getting Started, React Best Practices, Rule File
 Cohesion: 0.33
 Nodes (5): clubIds, ids, raw, t2, todo
 
+### Community 101 - "Market.tsx"
+Cohesion: 0.40
+Nodes (8): compFixtures(), playerMarketStatus(), StadiumView(), potRange(), ClubView(), Market(), Negotiation(), Tab
+
 ### Community 105 - "4. Client-Side Data Fetching"
 Cohesion: 0.40
 Nodes (5): 4.1 Deduplicate Global Event Listeners, 4.2 Use Passive Event Listeners for Scrolling Performance, 4.3 Use SWR for Automatic Deduplication, 4.4 Version and Minimize localStorage Data, 4. Client-Side Data Fetching
@@ -626,23 +638,35 @@ Nodes (3): arts, res, ws
 Cohesion: 0.50
 Nodes (3): File-System Paths, Import Paths, Prefer Statically Analyzable Paths
 
+### Community 182 - "table.ts"
+Cohesion: 0.36
+Nodes (8): accumulate(), critValue(), emptyRow(), Points, sortGroup(), standings(), StandingRow, Tiebreak
+
+### Community 183 - "Arquitetura"
+Cohesion: 0.33
+Nodes (6): Arquitetura, Documento de continuidade, Estado atual, Pontos sensíveis, Próximos passos sugeridos, archiveSeason()
+
+### Community 184 - "StatLine"
+Cohesion: 0.67
+Nodes (4): StatRow, CompKind, StatLine, Agg
+
 ## Knowledge Gaps
-- **83 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **80 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `React Best Practices` connect `React Best Practices` to `2. Bundle Size Optimization`, `5. Re-render Optimization`, `7. JavaScript Performance`, `4. Client-Side Data Fetching`, `6. Rendering Performance`, `3. Server-Side Performance`, `1. Eliminating Waterfalls`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
-- **Should `Career Setup & Calendar` be split into smaller, more focused modules?**
-  _Cohesion score 0.05213112327956194 - nodes in this community are weakly interconnected._
-- **Why does `MatchSim` connect `MatchSim` to `Career Setup & Calendar`, `Save Migration & Validation`, `TypeScript Config`, `.outcome`, `Membership Scripts`, `.autoManage`, `Tactics`, `subs-stats.test.ts`, `Fixture Date Planning`, `Fixture Conflict Resolution`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
-- **Should `Save Migration & Validation` be split into smaller, more focused modules?**
-  _Cohesion score 0.05318352059925094 - nodes in this community are weakly interconnected._
-- **Why does `Avatar()` connect `Career Setup & Calendar` to `5. Re-render Optimization`?**
-  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **Why does `5. Re-render Optimization` connect `5. Re-render Optimization` to `React Best Practices`?**
+  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+- **Should `App.tsx` be split into smaller, more focused modules?**
+  _Cohesion score 0.10412299091544375 - nodes in this community are weakly interconnected._
+- **Why does `Avatar()` connect `Player.tsx` to `5. Re-render Optimization`, `Editor.tsx`?**
+  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+- **Should `management.test.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.09025974025974026 - nodes in this community are weakly interconnected._
+- **Why does `5.4 Don't Define Components Inside Components` connect `5. Re-render Optimization` to `Player.tsx`?**
+  _High betweenness centrality (0.034) - this node is a cross-community bridge._
 - **Should `Live Match Simulation` be split into smaller, more focused modules?**
-  _Cohesion score 0.059720869847452125 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.058747160012982795 - nodes in this community are weakly interconnected._
 - **Should `Match Engine & Lineups` be split into smaller, more focused modules?**
   _Cohesion score 0.07541478129713423 - nodes in this community are weakly interconnected._
