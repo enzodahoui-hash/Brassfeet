@@ -277,6 +277,45 @@ export function Confirm({ title, text, confirmLabel = 'Confirmar', danger, onYes
   );
 }
 
+/** Props que tornam um elemento não-semântico (div/span) clicável acessível por teclado (Enter/Espaço). */
+export function clickable(onClick?: () => void): { role?: 'button'; tabIndex?: number; onClick?: () => void; onKeyDown?: (e: ReactKeyboardEvent) => void } {
+  if (!onClick) return {};
+  return {
+    role: 'button',
+    tabIndex: 0,
+    onClick,
+    onKeyDown: (e: ReactKeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } },
+  };
+}
+
+export interface MenuItem { label: ReactNode; onClick: () => void; danger?: boolean; disabled?: boolean }
+/** Menu de estouro acessível (aria-haspopup/expanded, fecha no Escape e no clique fora). */
+export function Menu({ label = 'Mais', icon = 'menu', items, align = 'right' }: { label?: string; icon?: string; items: MenuItem[]; align?: 'left' | 'right' }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setOpen(false); ref.current?.querySelector<HTMLButtonElement>('button')?.focus(); } };
+    document.addEventListener('mousedown', onDoc);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDoc); document.removeEventListener('keydown', onKey); };
+  }, [open]);
+  if (!items.length) return null;
+  return (
+    <div className="menu-wrap" ref={ref}>
+      <button type="button" className="btn" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((v) => !v)}><Icon name={icon} />{label}</button>
+      {open && (
+        <div className={`menu-pop ${align}`} role="menu">
+          {items.map((it, i) => (
+            <button key={i} type="button" role="menuitem" className={it.danger ? 'danger' : ''} disabled={it.disabled} onClick={() => { setOpen(false); it.onClick(); }}>{it.label}</button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Toasts() {
   const s = useGame();
   return (

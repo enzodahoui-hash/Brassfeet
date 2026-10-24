@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState, type ReactNode } from 'react';
 import type { Career, Club, CompTemplate, CrestDesign, Foot, Player, Pos, Tiebreak, World } from '../../engine/types';
 import { store, useGame, tick } from '../store';
-import { PageHead, Panel, Table, Tabs, Field, NumInput, Money, Lvl, Confirm, Empty, PosB } from '../components/common';
+import { PageHead, Panel, Table, Tabs, Field, NumInput, Money, Lvl, Confirm, Empty, PosB, clickable } from '../components/common';
 import { Crest } from '../components/graphics';
 import { Icon } from '../components/Icon';
 import { Creator } from './Creator';
@@ -404,7 +404,7 @@ function CompsTab({ w, mut }: { w: W; mut: Mut }) {
             <div key={k}>
               <div className="nav-group" style={{ padding: '8px 12px 2px' }}>{KIND_PT[k]}</div>
               {all.filter((x) => x.kind === k).map((x) => (
-                <div key={x.id} className={`small link ${x.id === sel ? 'strong' : ''}`} style={{ padding: '3px 12px', cursor: 'pointer', opacity: x.enabled ? 1 : 0.55 }} onClick={() => setSel(x.id)}>
+                <div key={x.id} className={`small link ${x.id === sel ? 'strong' : ''}`} style={{ padding: '3px 12px', cursor: 'pointer', opacity: x.enabled ? 1 : 0.55 }} {...clickable(() => setSel(x.id))}>
                   <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: 2, background: x.color, marginRight: 6 }} />{x.name}{!x.enabled && ' (inativa)'}
                 </div>
               ))}

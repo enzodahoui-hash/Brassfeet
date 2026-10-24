@@ -241,6 +241,22 @@ button.link { background: none; border: 0; padding: 0; margin: 0; font: inherit;
 .tabs button:hover { color: var(--text); }
 .tabs button.on { color: var(--text); border-color: var(--accent); }
 
+/* ───────── menu de estouro ───────── */
+.menu-wrap { position: relative; display: inline-flex; }
+.menu-pop {
+  position: absolute; top: calc(100% + 4px); min-width: 180px; z-index: 40; display: flex; flex-direction: column; padding: 4px;
+  background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 8px; box-shadow: var(--shadow);
+}
+.menu-pop.right { right: 0; }
+.menu-pop.left { left: 0; }
+.menu-pop button {
+  background: transparent; border: 0; color: var(--text); text-align: left; cursor: pointer; font: 600 13px/1.2 var(--f-body);
+  padding: 9px 11px; border-radius: 5px; white-space: nowrap;
+}
+.menu-pop button:hover:not(:disabled) { background: var(--panel-3); }
+.menu-pop button.danger { color: var(--loss); }
+.menu-pop button:disabled { opacity: 0.45; cursor: not-allowed; }
+
 /* ───────── modal / toast ───────── */
 .overlay { position: fixed; inset: 0; background: rgba(2, 6, 4, 0.72); display: grid; place-items: center; z-index: 100; padding: 16px; animation: fade 0.15s ease; }
 .modal { background: var(--panel); border: 1px solid var(--line-2); border-radius: 10px; width: min(760px, 100%); max-height: calc(100vh - 32px); overflow: auto; box-shadow: var(--shadow); }

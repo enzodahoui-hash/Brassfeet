@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { AwardCandidate, AwardResult } from '../../engine/types';
 import { store, useCareer, useGame } from '../store';
-import { PageHead, Panel, Table, Tabs, Empty, ClubName } from '../components/common';
+import { PageHead, Panel, Table, Tabs, Empty, ClubName, clickable } from '../components/common';
 import { Face } from '../components/graphics';
 import { Icon } from '../components/Icon';
 import { awardName, ballonDay, candidateScore, galaDay } from '../../engine/awards/awards';
@@ -69,7 +69,7 @@ function Ceremony({ a }: { a: AwardResult }) {
         ) : (
           <div className="winner">
             {app && <Face a={app} photo={photo} size={96} />}
-            <div className="wn link" onClick={playerLink(a.winnerId)}>{a.winnerName}</div>
+            <div className="wn link" {...clickable(playerLink(a.winnerId))}>{a.winnerName}</div>
             <div>{a.winnerClubName}{a.winnerNat ? ` · ${nationName(a.winnerNat)}` : ''}</div>
           </div>
         )}
@@ -79,7 +79,7 @@ function Ceremony({ a }: { a: AwardResult }) {
             {[top3[1], top3[0], top3[2]].map((cd, i) => (
               <div key={cd.playerId} className={`step p${[2, 1, 3][i]}`}>
                 <div style={{ font: '800 26px var(--f-display)', color: 'var(--gold)' }}>{[2, 1, 3][i]}º</div>
-                <div className="strong link" onClick={playerLink(cd.playerId)}>{cd.name}</div>
+                <div className="strong link" {...clickable(playerLink(cd.playerId))}>{cd.name}</div>
                 <div className="tiny muted">{cd.clubName}</div>
                 <div className="small">{cd.votes ?? 0} pts</div>
               </div>
@@ -103,7 +103,7 @@ function Ceremony({ a }: { a: AwardResult }) {
             {winner && <Panel title={`Por que ${winner.name}?`}><Breakdown cd={winner} /></Panel>}
             {prev.length > 0 && (
               <Panel title="Edições anteriores">
-                {prev.map((p) => <div key={p.key} className="small link" style={{ cursor: 'pointer' }} onClick={() => store.go({ name: 'awards', id: p.key })}>{p.edition} — {p.winnerName} ({p.winnerClubName ?? '—'})</div>)}
+                {prev.map((p) => <div key={p.key} className="small link" style={{ cursor: 'pointer' }} {...clickable(() => store.go({ name: 'awards', id: p.key }))}>{p.edition} — {p.winnerName} ({p.winnerClubName ?? '—'})</div>)}
               </Panel>
             )}
           </div>
@@ -179,10 +179,10 @@ export function Awards({ id }: { id?: string }) {
       {tab === 'historico' && (
         <div className="grid g2">
           <Panel title={`Vencedores da ${cfg.ballonName}`}>
-            {ballons.length ? ballons.map((b) => <div key={b.key} className="small link" style={{ cursor: 'pointer' }} onClick={() => store.go({ name: 'awards', id: b.key })}>{b.edition} — <strong>{b.winnerName}</strong> ({b.winnerClubName})</div>) : <Empty>Nenhuma edição ainda.</Empty>}
+            {ballons.length ? ballons.map((b) => <div key={b.key} className="small link" style={{ cursor: 'pointer' }} {...clickable(() => store.go({ name: 'awards', id: b.key }))}>{b.edition} — <strong>{b.winnerName}</strong> ({b.winnerClubName})</div>) : <Empty>Nenhuma edição ainda.</Empty>}
           </Panel>
           <Panel title="Prêmios do seu clube">
-            {mine.length ? mine.map((b) => <div key={b.key} className="small link" style={{ cursor: 'pointer' }} onClick={() => store.go({ name: 'awards', id: b.key })}>{b.edition} — {b.name}: <strong>{b.winnerName}</strong></div>) : <Empty>Nenhum prêmio individual para o clube ainda.</Empty>}
+            {mine.length ? mine.map((b) => <div key={b.key} className="small link" style={{ cursor: 'pointer' }} {...clickable(() => store.go({ name: 'awards', id: b.key }))}>{b.edition} — {b.name}: <strong>{b.winnerName}</strong></div>) : <Empty>Nenhum prêmio individual para o clube ainda.</Empty>}
           </Panel>
           <Panel title="Prêmios configurados">
             <div className="small stack" style={{ gap: 3 }}>

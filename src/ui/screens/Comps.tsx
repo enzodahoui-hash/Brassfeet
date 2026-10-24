@@ -240,7 +240,7 @@ function ScorersTab({ comp }: { comp: CompInstance }) {
   const assists = comp.pruned && comp.topAssists ? comp.topAssists.map((t) => ({ playerId: t.playerId, assists: t.assists, clubId: t.clubId })) : rows.filter((r) => r.assists > 0).sort((a, b) => b.assists - a.assists).slice(0, 25);
   const name = (pid: string) => {
     const p = c.players[pid];
-    return p ? <span className="pname"><span className="link" onClick={() => store.go({ name: 'player', id: pid })}>{p.name}</span><Stars p={p} /></span> : <span>{c.retired[pid]?.name ?? '—'}</span>;
+    return p ? <span className="pname"><button type="button" className="link" onClick={() => store.go({ name: 'player', id: pid })}>{p.name}</button><Stars p={p} /></span> : <span>{c.retired[pid]?.name ?? '—'}</span>;
   };
   return (
     <div className="grid g2">

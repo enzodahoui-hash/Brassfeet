@@ -3,7 +3,7 @@ import type { Club, Difficulty, FinanceMode, FinanceSettings, World } from '../.
 import { useGame, tick } from '../store';
 import { Icon, BrandMark } from '../components/Icon';
 import { Crest } from '../components/graphics';
-import { Lvl, Money, Field, NumInput, Table, Panel } from '../components/common';
+import { Lvl, Money, Field, NumInput, Table, Panel, Confirm } from '../components/common';
 import { levelLabel, ovrToLevel } from '../../engine/players/attributes';
 import { FINANCE_MODES, defaultFinanceSettings } from '../../engine/finance/economy';
 import { fmtMoney } from '../../engine/finance/ledger';
@@ -95,6 +95,7 @@ export function StartScreen() {
 
 function LoadList({ onBack }: { onBack: () => void }) {
   const s = useGame();
+  const [del, setDel] = useState<{ id: string; name: string } | null>(null);
   return (
     <div className="wizard">
       <div className="row"><button className="btn" onClick={onBack}><Icon name="back" />Voltar</button><h1>Carregar carreira</h1></div>
@@ -102,13 +103,20 @@ function LoadList({ onBack }: { onBack: () => void }) {
       <Panel flush>
         <Table rows={s.saves} rowKey={(r) => r.id} onRow={(r) => void s.loadCareer(r.id)} cols={[
           { key: 'n', label: 'Salvamento', render: (r) => <strong>{r.name}</strong> },
-          { key: 'c', label: 'Clube', render: (r) => r.clubName },
+          { key: 'c', label: 'Clube', render: (r) => r.clubName, cls: 'hide-m' },
           { key: 's', label: 'Temporada', render: (r) => r.season, cls: 'n' },
-          { key: 'm', label: 'Treinador', render: (r) => r.manager },
-          { key: 'u', label: 'Atualizado', render: (r) => new Date(r.updated).toLocaleString('pt-BR') },
-          { key: 'b', label: 'Tamanho', render: (r) => `${(r.bytes / 1e6).toFixed(1)} MB`, cls: 'n' },
-        ]} />
+          { key: 'm', label: 'Treinador', render: (r) => r.manager, cls: 'hide-m' },
+          { key: 'u', label: 'Atualizado', render: (r) => new Date(r.updated).toLocaleString('pt-BR'), cls: 'hide-m' },
+          { key: 'b', label: 'Tamanho', render: (r) => `${(r.bytes / 1e6).toFixed(1)} MB`, cls: 'n hide-m' },
+          { key: 'a', label: '', cls: 'act-col', render: (r) => (
+            <span className="row tight">
+              <button className="btn sm" onClick={(e) => { e.stopPropagation(); void s.loadCareer(r.id); }}>Carregar</button>
+              <button className="btn sm danger" onClick={(e) => { e.stopPropagation(); setDel({ id: r.id, name: r.name }); }} aria-label="Excluir"><Icon name="trash" /></button>
+            </span>
+          ) },
+        ]} empty="Nenhum salvamento neste navegador." />
       </Panel>
+      {del && <Confirm title="Excluir salvamento?" danger confirmLabel="Excluir" text={`O salvamento "${del.name}" e sua cópia de segurança serão apagados permanentemente deste navegador.`} onNo={() => setDel(null)} onYes={async () => { const id = del.id; setDel(null); await s.sm.deleteCareer(id); await s.refreshLists(); s.toast('Salvamento excluído.'); }} />}
     </div>
   );
 }

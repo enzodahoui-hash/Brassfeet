@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { Player, StaffRole } from '../../engine/types';
 import { store, useCareer, useGame } from '../store';
-import { Panel, PageHead, Lvl, PosB, Stars, Money, Morale, Cond, Bar, Modal, Confirm, Field, NumInput, ClubName, Table, Empty, StarIcon, levelColor } from '../components/common';
+import { Panel, PageHead, Lvl, PosB, Stars, Money, Morale, Cond, Bar, Modal, Confirm, Field, NumInput, ClubName, Table, Empty, StarIcon, levelColor, Menu, clickable, type MenuItem } from '../components/common';
 import { Avatar, Face, commonsPage } from '../components/graphics';
 import { Icon } from '../components/Icon';
 import { ATTRS, ATTR_GROUPS, POS_NAME, ovrToLevel, playerLevel, playerLevelLabel, levelLabel } from '../../engine/players/attributes';
@@ -50,11 +50,13 @@ export function PlayerPage({ id }: { id: string }) {
         actions={own ? (
           <>
             {youthHere && <button className="btn go" onClick={() => store.act((cc) => promote(cc, p, 'rotation'), 'Jogador promovido ao profissional.')}><Icon name="youth" />Promover</button>}
-            {p.contract && p.clubId === c.userClubId && <button className="btn" onClick={() => setModal('renew')}>Renovar contrato</button>}
-            {p.clubId === c.userClubId && <button className="btn" onClick={() => store.act((cc) => toggleListed(cc, p.id))}>{p.listed ? 'Tirar da lista de venda' : 'Colocar à venda'}</button>}
-            {p.clubId === c.userClubId && <button className="btn" onClick={() => setModal('loan')}>Emprestar</button>}
             <button className="btn" onClick={() => setModal('compare')}>Comparar</button>
-            {p.clubId === c.userClubId && <button className="btn danger" onClick={() => setModal('release')}>Liberar</button>}
+            <Menu label="Mais" items={[
+              ...(p.contract && p.clubId === c.userClubId ? [{ label: 'Renovar contrato', onClick: () => setModal('renew') }] : []),
+              ...(p.clubId === c.userClubId ? [{ label: p.listed ? 'Tirar da lista de venda' : 'Colocar à venda', onClick: () => store.act((cc) => toggleListed(cc, p.id)) }] : []),
+              ...(p.clubId === c.userClubId ? [{ label: 'Emprestar', onClick: () => setModal('loan') }] : []),
+              ...(p.clubId === c.userClubId ? [{ label: 'Liberar', onClick: () => setModal('release'), danger: true }] : []),
+            ] satisfies MenuItem[]} />
           </>
         ) : (
           <>
@@ -98,7 +100,7 @@ export function PlayerPage({ id }: { id: string }) {
               <div>
                 <h4>Prêmios individuais</h4>
                 {awards.length === 0 && <div className="small muted">Nenhum prêmio ainda.</div>}
-                {awards.map((a) => <div key={a.key} className="small link" style={{ cursor: 'pointer' }} onClick={() => store.go({ name: 'awards', id: a.key })}><Icon name="award" className="star-ico" /> {a.name} {a.edition}</div>)}
+                {awards.map((a) => <div key={a.key} className="small link" style={{ cursor: 'pointer' }} {...clickable(() => store.go({ name: 'awards', id: a.key }))}><Icon name="award" className="star-ico" /> {a.name} {a.edition}</div>)}
                 {p.achievements.filter((a) => a.kind === 'award' && a.awardId === 'team').map((a) => <div key={a.key} className="small"><Icon name="award" className="star-ico" /> {a.label}</div>)}
                 <h4 style={{ marginTop: 10 }}>Bola de Ouro e indicações</h4>
                 <div className="small">Indicações: <strong>{p.nominations?.nominated ?? 0}</strong> · Finalista: <strong>{p.nominations?.finalist ?? 0}</strong> · Vitórias: <strong>{p.nominations?.won ?? 0}</strong></div>
