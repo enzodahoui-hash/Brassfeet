@@ -117,6 +117,66 @@ export function autoLineup(world: World, club: Club, formation: string, compId?:
   return { starters, bench };
 }
 
+export type LineupPreset = 'strong' | 'balanced' | 'rotation' | 'youth';
+
+export const LINEUP_PRESETS: { id: LineupPreset; label: string; desc: string }[] = [
+  { id: 'strong', label: 'Força máxima', desc: 'O melhor onze disponível, sem poupar ninguém.' },
+  { id: 'balanced', label: 'Equilibrada', desc: 'O melhor onze, mas poupando quem está cansado.' },
+  { id: 'rotation', label: 'Reservas', desc: 'Poupa os titulares e escala os reservas.' },
+  { id: 'youth', label: 'Base', desc: 'Dá minutos aos mais jovens do elenco.' },
+];
+
+/**
+ * Monta uma escalação para um objetivo, sempre a partir do estado ATUAL do elenco.
+ * Só considera jogadores disponíveis (nunca lesionados ou suspensos) e sempre
+ * preenche todas as vagas — se faltar jogador do perfil, completa com quem houver.
+ */
+export function presetLineup(world: World, club: Club, formation: string, preset: LineupPreset, compId?: string): Lineup {
+  const slots = slotsOf(formation);
+  const pool = club.playerIds.map((id) => world.players[id]).filter((p): p is Player => !!p && isAvailable(p, compId));
+  const birthYears = pool.map((p) => p.birthYear);
+  const minBirth = birthYears.length ? Math.min(...birthYears) : 0;
+  const span = Math.max(1, (birthYears.length ? Math.max(...birthYears) : 0) - minBirth);
+  const firstChoice = preset === 'rotation' ? new Set(autoLineup(world, club, formation, compId, false).starters.filter(Boolean) as string[]) : null;
+  const score = (p: Player, slot: Pos): number => {
+    const base = slotRating(p, slot);
+    if (preset === 'strong') return base;
+    if (preset === 'balanced') { const condF = p.condition < 70 ? 0.7 : p.condition < 82 ? 0.94 : 1; return base * condF; }
+    if (preset === 'rotation') return base * (firstChoice!.has(p.id) ? 0.35 : 1); // titular só entra se faltar reserva para a vaga
+    const youth = (p.birthYear - minBirth) / span; // 0 = mais velho, 1 = mais novo
+    return base * (0.7 + 0.6 * youth); // prioriza jovens sem ignorar a aptidão na posição
+  };
+  const used = new Set<string>();
+  const starters: (string | null)[] = new Array(slots.length).fill(null);
+  const idx = slots.map((_, i) => i).sort((a, b) => ORDER.indexOf(slots[a].pos) - ORDER.indexOf(slots[b].pos));
+  for (const i of idx) {
+    const slot = slots[i].pos;
+    let best: Player | null = null;
+    let bestScore = -1;
+    for (const p of pool) {
+      if (used.has(p.id)) continue;
+      const s = score(p, slot);
+      if (s > bestScore) {
+        bestScore = s;
+        best = p;
+      }
+    }
+    if (best) {
+      starters[i] = best.id;
+      used.add(best.id);
+    }
+  }
+  const rest = pool.filter((p) => !used.has(p.id)).sort((a, b) => b.ovr - a.ovr);
+  const bench: string[] = [];
+  const gk = rest.find((p) => p.pos === 'GK');
+  if (gk) bench.push(gk.id);
+  for (const p of rest) {
+    if (bench.length >= 9) break;
+    if (!bench.includes(p.id)) bench.push(p.id);
+  }
+  return { starters, bench };
+}
+
 export interface LineupIssue {
   level: 'error' | 'warning';
   text: string;

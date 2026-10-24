@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 import type { Lineup, Player, Tactics as T } from '../../engine/types';
 import { store, useCareer, useGame } from '../store';
-import { PageHead, Panel, PosB, Lvl, Cond, PName } from '../components/common';
+import { PageHead, Panel, PosB, Lvl, Cond, PName, Menu } from '../components/common';
 import { AutoSubsPanel } from './SubsPanel';
 import { MiniShirt } from '../components/graphics';
-import { FORMATION_NAMES, autoLineup, slotRating, slotsOf, validateLineup, availabilityNote } from '../../engine/clubs/lineup';
+import { FORMATION_NAMES, autoLineup, presetLineup, LINEUP_PRESETS, slotRating, slotsOf, validateLineup, availabilityNote } from '../../engine/clubs/lineup';
 import { ovrToLevel, positionFit } from '../../engine/players/attributes';
 import { currentCollection } from '../../engine/kits/commerce';
 import { strengthSummary } from '../../engine/clubs/strength';
@@ -84,8 +84,10 @@ export function Tactics() {
       <PageHead title="Táticas e escalação" sub={next ? `Próximo jogo: ${c.clubs[next.home === club.id ? next.away : next.home].name} (${c.competitions[next.compId]?.name})` : 'Sem próximos jogos'}
         actions={<>
           <select value={formation} onChange={(e) => store.act((cc) => { const cl = cc.clubs[cc.userClubId]; cl.tactics = { ...cl.tactics, formation: e.target.value }; cl.lineup = autoLineup(cc, cl, e.target.value, compId); })}>{FORMATION_NAMES.map((f) => <option key={f} value={f}>{f}</option>)}</select>
-          <button className="btn" onClick={() => save(autoLineup(c, club, formation, compId))}><Icon name="wand" />Escalação automática</button>
-          <button className="btn" onClick={() => save(autoLineup(c, club, formation, compId, true))}>Poupar cansados</button>
+          <Menu label="Escalações" icon="wand" items={LINEUP_PRESETS.map((p) => ({
+            label: <span style={{ display: 'flex', flexDirection: 'column', gap: 2, whiteSpace: 'normal', maxWidth: 230 }}><strong>{p.label}</strong><span className="tiny muted">{p.desc}</span></span>,
+            onClick: () => { save(presetLineup(c, club, formation, p.id, compId)); store.toast(`Escalação aplicada: ${p.label}.`); },
+          }))} />
         </>} />
       <div className="grid g-main">
         <div className="stack">
