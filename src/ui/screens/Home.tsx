@@ -64,7 +64,7 @@ export function Home() {
           <div className="grid g2">
             <Panel title={league?.name ?? 'Liga'} right={league && <button className="btn sm" onClick={() => store.go({ name: 'comp', id: league.id })}>Tabela completa</button>} flush>
               <div className="tbl-wrap">
-                <table className="tbl">
+                <table className="tbl flat">
                   <thead><tr><th className="n">#</th><th>Clube</th><th className="n">J</th><th className="n">SG</th><th className="n">P</th></tr></thead>
                   <tbody>
                     {table.slice(from, from + 9).map((r, i) => (
@@ -78,7 +78,7 @@ export function Home() {
             </Panel>
             <Panel title="Últimos resultados" flush>
               <div className="tbl-wrap">
-                <table className="tbl">
+                <table className="tbl flat">
                   <tbody>
                     {recent.map((f) => {
                       const r = f.result!;

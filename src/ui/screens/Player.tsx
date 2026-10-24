@@ -273,7 +273,7 @@ function CompareModal({ p, onClose }: { p: Player; onClose: () => void }) {
       <div className="row"><input type="search" placeholder="Buscar jogador" value={q} onChange={(e) => setQ(e.target.value)} />{cands.map((x) => <button key={x.id} className={`btn sm ${other === x.id ? 'primary' : ''}`} onClick={() => setOther(x.id)}>{x.name}</button>)}</div>
       {o && (
         <div className="tbl-wrap" style={{ marginTop: 12 }}>
-          <table className="tbl">
+          <table className="tbl flat">
             <thead><tr><th>Atributo</th><th className="n">{p.name}</th><th className="n">{o.name}</th></tr></thead>
             <tbody>
               <tr><td>Nível</td><td className="n"><Lvl v={playerLevel(p)} size="sm" /></td><td className="n"><Lvl v={playerLevel(o)} size="sm" /></td></tr>

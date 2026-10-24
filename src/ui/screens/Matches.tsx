@@ -171,7 +171,7 @@ export function MatchReport({ id, tab: initialTab }: { id: string; tab?: string 
             </Panel>
             {table.length > 0 && (
               <Panel title="Impacto na classificação" flush>
-                <div className="tbl-wrap"><table className="tbl"><tbody>{table.slice(0, 20).filter((x) => x.clubId === home.id || x.clubId === away.id).map((x) => <tr key={x.clubId}><td className="n">{pos(x.clubId)}º</td><td><ClubName id={x.clubId} /></td><td className="n">{x.pts} pts</td><td><Form f={x.form} /></td></tr>)}</tbody></table></div>
+                <div className="tbl-wrap"><table className="tbl flat"><tbody>{table.slice(0, 20).filter((x) => x.clubId === home.id || x.clubId === away.id).map((x) => <tr key={x.clubId}><td className="n">{pos(x.clubId)}º</td><td><ClubName id={x.clubId} /></td><td className="n">{x.pts} pts</td><td><Form f={x.form} /></td></tr>)}</tbody></table></div>
               </Panel>
             )}
           </div>
@@ -200,7 +200,7 @@ export function MatchReport({ id, tab: initialTab }: { id: string; tab?: string 
             return (
               <Panel key={side} title={(side === 0 ? home : away).name} flush>
                 {ids.length ? (
-                  <div className="tbl-wrap"><table className="tbl"><tbody>
+                  <div className="tbl-wrap"><table className="tbl flat"><tbody>
                     {ids.map((pid) => { const p = c.players[pid]; return p ? <tr key={pid}><td><PosB pos={p.pos} /></td><td>{p.name}<Stars p={p} /></td><td className="n"><Lvl v={r.ratings?.[pid] ?? 6} size="sm" tip="Nota da partida" /></td><td className="n strong">{r.ratings?.[pid]?.toFixed(1)}</td></tr> : null; })}
                     {subs.map((s, i) => <tr key={`s${i}`}><td className="small muted">{s.min}'</td><td className="small">↑ {c.players[s.in]?.name} <span className="muted">↓ {c.players[s.out]?.name}</span></td><td /><td className="n">{r.ratings?.[s.in]?.toFixed(1)}</td></tr>)}
                   </tbody></table></div>

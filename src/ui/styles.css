@@ -556,3 +556,48 @@ button.link { background: none; border: 0; padding: 0; margin: 0; font: inherit;
 }
 @keyframes goalflash { 0% { box-shadow: inset 0 0 0 999px rgba(57, 201, 119, 0.35); } 100% { box-shadow: inset 0 0 0 999px rgba(57, 201, 119, 0); } }
 .scoreboard.flash { animation: goalflash 1.6s ease-out; }
+
+/* ───────── tabelas em modo cartão (celular) — sem scroll horizontal ─────────
+   Vale para TODA .tbl: cada linha vira um cartão com "rótulo: valor".
+   Os rótulos vêm de data-label (o componente Table preenche sozinho; tabelas
+   próprias devem passar data-label nas <td> para exibir o rótulo). */
+@media (max-width: 520px) {
+  .tbl { display: block; width: 100%; }
+  .tbl thead { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); border: 0; }
+  .tbl tbody { display: block; }
+  .tbl tr {
+    display: block; border: 1px solid var(--line-2); border-radius: 8px; padding: 6px 12px; margin-bottom: 8px; background: var(--panel-2);
+  }
+  .tbl tr:hover td { background: transparent; }
+  .tbl td {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 5px 0; border: 0; border-bottom: 1px solid #16271d; white-space: normal; text-align: right; min-height: 34px;
+  }
+  .tbl tr td:last-child { border-bottom: 0; }
+  .tbl td::before {
+    content: attr(data-label); color: var(--muted); font-weight: 600; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em;
+    text-align: left; flex: 0 0 auto; margin-right: auto; white-space: nowrap;
+  }
+  .tbl td[data-label='']::before, .tbl td:not([data-label])::before { content: none; }
+  /* mostra no cartão as colunas que a tabela esconde no celular (há espaço vertical) */
+  .tbl td.hide-m { display: flex; }
+  /* a coluna de ações volta ao fluxo e alinha os botões à direita */
+  .tbl td.act-col { position: static; right: auto; box-shadow: none; justify-content: flex-end; padding-top: 8px; }
+  .tbl td.act-col::before { content: none; }
+  /* realce da linha do usuário/atual continua visível no cartão */
+  .tbl tr.me, .tbl tr.sel { box-shadow: inset 3px 0 0 var(--accent); }
+
+  /* tabelas de COMPARAÇÃO (.flat): seguem tabulares e compactas — sem cartão.
+     As colunas secundárias marcadas .hide-m somem para caber sem scroll. */
+  .tbl.flat { display: table; }
+  .tbl.flat thead { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; clip-path: none; display: table-header-group; }
+  .tbl.flat tbody { display: table-row-group; }
+  .tbl.flat tr { display: table-row; border: 0; border-radius: 0; padding: 0; margin: 0; background: transparent; }
+  .tbl.flat tr:hover td { background: #13241b; }
+  .tbl.flat td { display: table-cell; border: 0; border-bottom: 1px solid #172a20; padding: 6px 7px; text-align: left; min-height: 0; white-space: nowrap; }
+  .tbl.flat td.n, .tbl.flat th.n { text-align: right; }
+  .tbl.flat td.c, .tbl.flat th.c { text-align: center; }
+  .tbl.flat td::before { content: none; }
+  .tbl.flat th.hide-m, .tbl.flat td.hide-m { display: none; }
+  .tbl.flat tr.me td:first-child, .tbl.flat tr.sel td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+}

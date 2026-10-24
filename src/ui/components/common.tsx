@@ -136,7 +136,7 @@ export interface Col<T> {
   tip?: string;
 }
 
-export function Table<T>({ rows, cols, rowKey, onRow, rowCls, initialSort, empty = 'Nada para mostrar.', maxRows }: { rows: T[]; cols: Col<T>[]; rowKey: (r: T) => string; onRow?: (r: T) => void; rowCls?: (r: T) => string; initialSort?: { key: string; dir: 1 | -1 }; empty?: string; maxRows?: number }) {
+export function Table<T>({ rows, cols, rowKey, onRow, rowCls, initialSort, empty = 'Nada para mostrar.', maxRows, variant = 'cards' }: { rows: T[]; cols: Col<T>[]; rowKey: (r: T) => string; onRow?: (r: T) => void; rowCls?: (r: T) => string; initialSort?: { key: string; dir: 1 | -1 }; empty?: string; maxRows?: number; variant?: 'cards' | 'flat' }) {
   const [sort, setSort] = useState(initialSort ?? null);
   const sorted = useMemo(() => {
     if (!sort) return rows;
@@ -151,7 +151,7 @@ export function Table<T>({ rows, cols, rowKey, onRow, rowCls, initialSort, empty
   const shown = maxRows ? sorted.slice(0, maxRows) : sorted;
   return (
     <div className="tbl-wrap">
-      <table className="tbl">
+      <table className={`tbl ${variant}`}>
         <thead>
           <tr>
             {cols.map((c) => (
@@ -170,7 +170,7 @@ export function Table<T>({ rows, cols, rowKey, onRow, rowCls, initialSort, empty
         <tbody>
           {shown.map((r) => (
             <tr key={rowKey(r)} className={`${onRow ? 'click' : ''} ${rowCls?.(r) ?? ''}`} onClick={onRow ? () => onRow(r) : undefined}>
-              {cols.map((c) => <td key={c.key} className={c.cls}>{c.render(r)}</td>)}
+              {cols.map((c) => <td key={c.key} className={c.cls} data-label={typeof c.label === 'string' ? c.label : undefined}>{c.render(r)}</td>)}
             </tr>
           ))}
         </tbody>

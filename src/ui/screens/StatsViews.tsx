@@ -250,7 +250,7 @@ export function CompareModal({ c, ids, period, scope, comp, onClose }: { c: Care
     <Modal title="Comparação de jogadores" size="wide" onClose={onClose}>
       <div className="small muted" style={{ marginBottom: 8 }}>Mesmo recorte para todos: {periodLabel(c, period, scope)}</div>
       <div className="tbl-wrap">
-        <table className="tbl">
+        <table className="tbl flat">
           <thead><tr><th /> {ps.map((p) => <th key={p.id} className="n">{p.name}</th>)}</tr></thead>
           <tbody>
             {line('Nível (0–25)', (a) => ovrToLevel(a.p.ovr), (v) => v.toFixed(1))}

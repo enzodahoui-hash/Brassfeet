@@ -53,12 +53,12 @@ function StandingsTable({ rows, compId, zones }: { rows: StandingRow[]; compId: 
   void compId;
   return (
     <div className="tbl-wrap">
-      <table className="tbl">
-        <thead><tr><th className="n">#</th><th>Clube</th><th className="n">P</th><th className="n">J</th><th className="n">V</th><th className="n">E</th><th className="n">D</th><th className="n">GP</th><th className="n">GC</th><th className="n">SG</th><th>Últimos</th></tr></thead>
+      <table className="tbl flat">
+        <thead><tr><th className="n">#</th><th>Clube</th><th className="n">P</th><th className="n">J</th><th className="n hide-m">V</th><th className="n hide-m">E</th><th className="n hide-m">D</th><th className="n hide-m">GP</th><th className="n hide-m">GC</th><th className="n">SG</th><th className="hide-m">Últimos</th></tr></thead>
         <tbody>
           {rows.map((r, i) => (
             <tr key={r.clubId} className={`${r.clubId === c.userClubId ? 'me' : ''} ${zones?.(i + 1) ?? ''}`}>
-              <td className="n">{i + 1}</td><td><ClubName id={r.clubId} /></td><td className="n strong">{r.pts}</td><td className="n">{r.p}</td><td className="n">{r.w}</td><td className="n">{r.d}</td><td className="n">{r.l}</td><td className="n">{r.gf}</td><td className="n">{r.ga}</td><td className="n">{r.gf - r.ga}</td><td><Form f={r.form} /></td>
+              <td className="n">{i + 1}</td><td><ClubName id={r.clubId} /></td><td className="n strong">{r.pts}</td><td className="n">{r.p}</td><td className="n hide-m">{r.w}</td><td className="n hide-m">{r.d}</td><td className="n hide-m">{r.l}</td><td className="n hide-m">{r.gf}</td><td className="n hide-m">{r.ga}</td><td className="n">{r.gf - r.ga}</td><td className="hide-m"><Form f={r.form} /></td>
             </tr>
           ))}
         </tbody>
@@ -245,14 +245,14 @@ function ScorersTab({ comp }: { comp: CompInstance }) {
   return (
     <div className="grid g2">
       <Panel title="Artilharia" flush>
-        <Table rows={goals} rowKey={(r) => r.playerId} cols={[
+        <Table rows={goals} rowKey={(r) => r.playerId} variant="flat" cols={[
           { key: 'i', label: '#', render: (r) => goals.indexOf(r) + 1, cls: 'n' }, { key: 'n', label: 'Jogador', render: (r) => name(r.playerId) },
           { key: 'c', label: 'Clube', render: (r) => <ClubName id={r.clubId} short /> }, { key: 'g', label: 'Gols', render: (r) => <strong>{r.goals}</strong>, cls: 'n' },
         ]} empty="Nenhum gol ainda." />
         <div className="tiny muted" style={{ padding: 8 }}>{comp.kind === 'league' ? 'O artilheiro ao fim da liga recebe a estrela dourada.' : comp.kind === 'continental' ? 'O artilheiro ao fim da competição recebe a estrela vermelha.' : 'Gols anulados e partidas invalidadas não contam.'}</div>
       </Panel>
       <Panel title="Assistências" flush>
-        <Table rows={assists} rowKey={(r) => r.playerId} cols={[
+        <Table rows={assists} rowKey={(r) => r.playerId} variant="flat" cols={[
           { key: 'i', label: '#', render: (r) => assists.indexOf(r) + 1, cls: 'n' }, { key: 'n', label: 'Jogador', render: (r) => name(r.playerId) },
           { key: 'c', label: 'Clube', render: (r) => <ClubName id={r.clubId} short /> }, { key: 'a', label: 'Assist.', render: (r) => <strong>{r.assists}</strong>, cls: 'n' },
         ]} empty="Nenhuma assistência ainda." />
