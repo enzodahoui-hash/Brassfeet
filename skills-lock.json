@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "graphify": {
+      "source": "vanducng/skills",
+      "sourceType": "github",
+      "skillPath": "skills/graphify/SKILL.md",
+      "computedHash": "9de795513cc2d2b6407e1e9c53b96643b780d7b650c553f5138daa780cde3c98"
+    }
+  }
+}
